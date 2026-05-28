@@ -31,12 +31,10 @@
 </head>
 <body class="ar-mode">
 
-    <!-- زر تغيير اللغة -->
     <div class="lang-switcher">
         <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
     </div>
 
-    <!-- صندوق تسجيل الدخول -->
     <div id="loginBox" class="admin-card">
         <img src="logo.png" style="width:140px; margin-bottom:20px;" onerror="this.src='https://sofygram.com/logo.png'">
         <h2 style="color:var(--glow);" id="txtLoginTitle">دخول الإدارة والسكرتارية 🔐</h2>
@@ -45,7 +43,6 @@
         <button onclick="login()" class="btn-save" id="txtLoginBtn">دخول</button>
     </div>
 
-    <!-- لوحة التحكم بعد تسجيل الدخول -->
     <div id="controlBox" class="admin-card" style="display:none;">
         <h2 id="cName" style="color:var(--glow); margin:0;"></h2>
         <div class="num-display" id="n">0</div>
@@ -77,8 +74,13 @@
         import { getDatabase, ref, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBqlRUshD3182zmliJrDUzBXQjL_eXSKtY",
-            databaseURL: "https://sofygramclinic-default-rtdb.firebaseio.com"
+            apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RZrQGALFBU",
+            authDomain: "sofygram-mobile-app.firebaseapp.com",
+            databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+            projectId: "sofygram-mobile-app",
+            storageBucket: "sofygram-mobile-app.firebasestorage.app",
+            messagingSenderId: "190753733711",
+            appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
