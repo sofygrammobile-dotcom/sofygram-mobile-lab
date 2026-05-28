@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,14 @@
         :root { --gold: #ffd700; --neon: #ff4500; --bg: #050a14; --silver: #c0c0c0; }
         body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; }
 
+        /* زر تبديل اللغة أعلى الشاشة */
+        .lang-switcher { position: absolute; top: 15px; left: 15px; z-index: 100; }
+        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
         .hero { background: radial-gradient(circle at center, #1a2a44 0%, var(--bg) 100%); padding: 30px 15px; }
         .logo-box img { width: 140px; filter: drop-shadow(0 0 15px var(--gold)); }
         .brand-title { font-size: 50px; font-weight: 900; text-shadow: 0 0 30px var(--gold); margin: 5px 0; }
 
-        /* محرك البحث السريع */
         .search-engine { 
             background: rgba(12, 18, 29, 0.95); border-radius: 40px; padding: 25px; 
             max-width: 900px; margin: 20px auto; border: 1px solid #1e293b;
@@ -31,14 +34,16 @@
         select, input { width: 100%; padding: 15px; border-radius: 15px; background: #000; border: 1px solid #333; color: white; font-size: 15px; outline: none; box-sizing: border-box; }
         .btn-main-search { grid-column: span 2; background: var(--gold); color: black; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 18px; cursor: pointer; border: none; margin-top: 10px; }
 
-        /* نتائج البحث */
         #results { margin-top: 30px; text-align: right; max-width: 850px; margin: auto; padding: 0 15px; }
+        body.en-mode #results { text-align: left; } /* تعديل محاذاة النص للإنجليزي */
+        
         .res-item { 
             background: #121c2c; padding: 20px; border-radius: 25px; margin-bottom: 15px; 
             border-right: 8px solid var(--gold); cursor: pointer; transition: 0.3s;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
-        .res-item:hover { transform: translateX(-5px); background: #1a2638; }
+        body.en-mode .res-item { border-right: none; border-left: 8px solid var(--gold); }
+        
         .res-name { color: var(--gold); margin: 0 0 8px 0; font-size: 22px; font-weight: bold; }
         .res-meta { color: #ccc; font-size: 14px; margin: 4px 0; display: flex; align-items: center; gap: 8px; }
         .res-meta i { color: var(--gold); font-size: 12px; }
@@ -48,11 +53,9 @@
             color: var(--gold); font-size: 13px; font-weight: bold;
         }
 
-        /* الملاحظات الذهبية الأربعة */
         .golden-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; max-width: 900px; margin: 30px auto; padding: 0 15px; }
         .note-card { background: rgba(255, 215, 0, 0.05); border: 1px solid var(--gold); padding: 15px; border-radius: 18px; font-size: 13px; color: var(--gold); font-weight: bold; }
 
-        /* الباقات */
         .plans { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 40px auto; max-width: 900px; }
         .plan-box { background: #0c121d; border: 2px solid var(--gold); border-radius: 25px; padding: 25px; width: 280px; }
         .plan-box.silver { border-color: var(--silver); }
@@ -69,10 +72,15 @@
 </head>
 <body onclick="playWelcome()">
 
+<!-- زر تحويل اللغة -->
+<div class="lang-switcher">
+    <button class="lang-btn" onclick="toggleLanguage(event)">English</button>
+</div>
+
 <div class="hero">
     <div class="logo-box"><img src="logo.png"></div>
     <h1 class="brand-title">SOFYGRAM</h1>
-    <p style="color:var(--gold); font-weight:bold; letter-spacing:2px;">المنصة العالمية لإدارة الانتظار الذكي 🛰️</p>
+    <p id="subTitle" style="color:var(--gold); font-weight:bold; letter-spacing:2px;">المنصة العالمية لإدارة الانتظار الذكي 🛰️</p>
 
     <div class="search-engine">
         <div class="mic-box">
@@ -82,10 +90,10 @@
 
         <div class="grid-filters">
             <select id="country" onchange="loadCities()">
-                <option value="">اختر الدولة</option>
+                <option value="" id="optCountry">اختر الدولة</option>
                 <option value="العراق">العراق 🇮🇶</option>
                 <option value="السعودية">السعودية 🇸🇦</option>
-                <option value="الإمارات">الإمارات 🇦🇪</option>
+                <option value="الإمارات">الإمارات 🇦ئه 🇦🇪</option>
                 <option value="الكويت">الكويت 🇰🇼</option>
                 <option value="قطر">قطر 🇶🇦</option>
                 <option value="مصر">مصر 🇪🇬</option>
@@ -97,52 +105,56 @@
                 <option value="إيران">إيران 🇮🇷</option>
                 <option value="أمريكا">أمريكا 🇺🇸</option>
                 <option value="أوروبا">أوروبا 🇪🇺</option>
-                <option value="غير ذلك">غير ذلك</option>
+                <option value="غير ذلك" id="optOtherCountry">غير ذلك</option>
             </select>
-            <select id="city"><option value="">اختر المحافظة/المدينة</option></select>
+            <select id="city"><option value="" id="optCity">اختر المحافظة/المدينة</option></select>
             <select id="category">
-                <option value="">نوع النشاط</option>
-                <optgroup label="طبي">
+                <option value="" id="optCategory">نوع النشاط</option>
+                <optgroup label="طبي" id="groupMedical">
                     <option>أطباء وعيادات</option><option>صيدليات</option><option>مختبرات</option><option>مراكز تجميل</option>
                 </optgroup>
-                <optgroup label="تجاري">
+                <optgroup label="تجاري" id="groupCommercial">
                     <option>مطاعم وكافيهات</option><option>أسواق ومولات</option><option>صاغة ومجوهرات</option><option>حلاقة رجالية</option><option>صالون نسائي</option><option>تجهيزات غذائية</option>
                 </optgroup>
-                <optgroup label="خدمي">
+                <optgroup label="خدمي" id="groupService">
                     <option>محاماة واستشارات</option><option>مكاتب تكسي</option><option>صيانة موبايل</option><option>كهربائي</option><option>نجارة</option><option>حدادة</option>
                 </optgroup>
-                <option>غير ذلك</option>
+                <option value="غير ذلك" id="optOtherCat">غير ذلك</option>
             </select>
             <input type="text" id="manualSearch" placeholder="ابحث باسم الدكتور أو العيادة أو النشاط...">
-            <button class="btn-main-search" onclick="runSofySearch()">ابحث الآن 🚀</button>
+            <button class="btn-main-search" id="searchBtn" onclick="runSofySearch()">ابحث الآن 🚀</button>
         </div>
         <div id="results"></div>
     </div>
 
     <div class="golden-notes">
-        <div class="note-card">🌟 تنظيم الطوابير عالمياً</div>
-        <div class="note-card">🕒 وداعاً للانتظار المزعج</div>
-        <div class="note-card">🛰️ متابعة فورية لدورك</div>
-        <div class="note-card">💎 فخامة وسهولة استخدام</div>
+        <div class="note-card" id="note1">🌟 تنظيم الطوابير عالمياً</div>
+        <div class="note-card" id="note2">🕒 وداعاً للانتظار المزعج</div>
+        <div class="note-card" id="note3">🛰️ متابعة فورية لدورك</div>
+        <div class="note-card" id="note4">💎 فخامة وسهولة استخدام</div>
     </div>
 
     <div class="plans">
         <div class="plan-box">
-            <h3 style="color:var(--gold)">الاشتراك الذهبي</h3>
-            <p style="font-size:12px; color:#aaa;">للأطباء والعيادات</p>
-            <div class="price">20,000 <small>د.ع</small></div>
-            <a href="register2.html?type=gold" class="btn-reg">اشترك الآن</a>
+            <h3 style="color:var(--gold)" id="goldTitle">الاشتراك الذهبي</h3>
+            <p style="font-size:12px; color:#aaa;" id="goldDesc">للأطباء والعيادات</p>
+            <div class="price" id="goldPrice">20,000 <small>د.ع</small></div>
+            <a href="pay.html?type=gold" class="btn-reg" id="goldBtn">اشترك الآن</a>
         </div>
         <div class="plan-box silver">
-            <h3 style="color:var(--silver)">الاشتراك الفضي</h3>
-            <p style="font-size:12px; color:#aaa;">لكافة الأنشطة الأخرى</p>
-            <div class="price">15,000 <small>د.ع</small></div>
-            <a href="register2.html?type=silver" class="btn-reg">اشترك الآن</a>
+            <h3 style="color:var(--silver)" id="silverTitle">الاشتراك الفضي</h3>
+            <p style="font-size:12px; color:#aaa;" id="silverDesc">لكافة الأنشطة الأخرى</p>
+            <div class="price" id="silverPrice">15,000 <small>د.ع</small></div>
+            <a href="pay.html?type=silver" class="btn-reg" id="silverBtn">اشترك الآن</a>
         </div>
     </div>
 
+    <div class="plans-global" style="margin-top: 15px;">
+         <p style="font-size: 13px; color: var(--silver);" id="globalPaymentDesc">للاشتراك من خارج العراق، تدعم المنصة بوابات الدفع العالمية (Stripe / PayPal) عند الانتقال لصفحة الاشتراك.</p>
+    </div>
+
     <div style="margin-top: 30px;">
-        <a href="admin.html" style="color:var(--gold); text-decoration:none; font-weight:bold; font-size:14px; border-bottom:1px solid var(--gold); padding-bottom:2px;">🗝️ دخول السكرتير أو صاحب النشاط</a>
+        <a href="admin.html" id="adminLink" style="color:var(--gold); text-decoration:none; font-weight:bold; font-size:14px; border-bottom:1px solid var(--gold); padding-bottom:2px;">🗝️ دخول السكرتير أو صاحب النشاط</a>
     </div>
 
     <footer class="social">
@@ -151,7 +163,7 @@
             <a href="https://instagram.com/sofygram.iq"><i class="fab fa-instagram"></i></a>
             <a href="https://t.me/sofygram"><i class="fab fa-telegram"></i></a>
         </div>
-        <p class="copy-text">جميع الحقوق محفوظة لصالح منصة صوفيگرام العالمية © 2026</p>
+        <p class="copy-text" id="copyText">جميع الحقوق محفوظة لصالح منصة صوفيگرام العالمية © 2026</p>
     </footer>
 </div>
 
@@ -174,33 +186,127 @@
         "أوروبا": ["لندن", "باريس", "برلين", "روما", "مدريد"]
     };
 
+    // القاموس اللغوي للترجمة الفورية ديناميكياً
+    let currentLang = 'ar';
+    const langData = {
+        ar: {
+            subTitle: "المنصة العالمية لإدارة الانتظار الذكي 🛰️",
+            micStatus: "البحث الصوتي الذكي",
+            placeholder: "ابحث باسم الدكتور أو العيادة أو النشاط...",
+            searchBtn: "ابحث الآن 🚀",
+            optCountry: "اختر الدولة", optOtherCountry: "غير ذلك",
+            optCity: "اختر المحافظة/المدينة", optCategory: "نوع النشاط",
+            groupMedical: "طبي", groupCommercial: "تجاري", groupService: "خدمي", optOtherCat: "غير ذلك",
+            note1: "🌟 تنظيم الطوابير عالمياً", note2: "🕒 وداعاً للانتظار المزعج", note3: "🛰️ متابعة فورية لدورك", note4: "💎 فخامة وسهولة استخدام",
+            goldTitle: "الاشتراك الذهبي", goldDesc: "للأطباء والعيادات", goldPrice: "20,000 <small>د.ع</small>", goldBtn: "اشترك الآن",
+            silverTitle: "الاشتراك الفضي", silverDesc: "لكافة الأنشطة الأخرى", silverPrice: "15,000 <small>د.ع</small>", silverBtn: "اشترك الآن",
+            globalPaymentDesc: "للاشتراك من خارج العراق، تدعم المنصة بوابات الدفع العالمية (Stripe / PayPal) عند الانتقال لصفحة الاشتراك.",
+            adminLink: "🗝️ دخول السكرتير أو صاحب النشاط",
+            copyText: "جميع الحقوق محفوظة لصالح منصة صوفيگرام العالمية © 2026",
+            searching: "جاري جلب البيانات الفورية...", noRes: "لم يتم العثور على نتائج تطابق بحثك.",
+            areaDefault: "المنطقة غير محددة", noteLabel: "ملاحظة"
+        },
+        en: {
+            subTitle: "The Global Platform for Smart Queue Management 🛰️",
+            micStatus: "Smart Voice Search",
+            placeholder: "Search by Doctor name, Clinic, or Activity...",
+            searchBtn: "Search Now 🚀",
+            optCountry: "Select Country", optOtherCountry: "Other",
+            optCity: "Select City/Governorate", optCategory: "Activity Type",
+            groupMedical: "Medical", groupCommercial: "Commercial", groupService: "Services", optOtherCat: "Other",
+            note1: "🌟 Global Queue Management", note2: "🕒 Goodbye Boring Waiting", note3: "🛰️ Live Tracking for Your Turn", note4: "💎 Premium & Easy to Use",
+            goldTitle: "Gold Subscription", goldDesc: "For Doctors & Clinics", goldPrice: "$15 <small>/Month</small>", goldBtn: "Subscribe Now",
+            silverTitle: "Silver Subscription", silverDesc: "For All Other Activities", silverPrice: "$10 <small>/Month</small>", silverBtn: "Subscribe Now",
+            globalPaymentDesc: "For international subscriptions, the platform supports international payment gateways (Stripe / PayPal).",
+            adminLink: "🗝️ Dashboard / Secretary Login",
+            copyText: "All Rights Reserved for Sofygram Global Platform © 2026",
+            searching: "Fetching live data...", noRes: "No results found matching your search.",
+            areaDefault: "Area not specified", noteLabel: "Note"
+        }
+    };
+
+    window.toggleLanguage = (e) => {
+        if(e) e.stopPropagation();
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        const html = document.getElementById('htmlTag');
+        const btn = document.querySelector('.lang-btn');
+        
+        if(currentLang === 'en') {
+            html.setAttribute('dir', 'ltr');
+            html.setAttribute('lang', 'en');
+            document.body.classList.add('en-mode');
+            btn.innerText = "العربية";
+        } else {
+            html.setAttribute('dir', 'rtl');
+            html.setAttribute('lang', 'ar');
+            document.body.classList.remove('en-mode');
+            btn.innerText = "English";
+        }
+        applyTranslations();
+    };
+
+    function applyTranslations() {
+        const t = langData[currentLang];
+        document.getElementById('subTitle').innerText = t.subTitle;
+        document.getElementById('micStatus').innerText = t.micStatus;
+        document.getElementById('manualSearch').placeholder = t.placeholder;
+        document.getElementById('searchBtn').innerText = t.searchBtn;
+        document.getElementById('optCountry').innerText = t.optCountry;
+        document.getElementById('optOtherCountry').innerText = t.optOtherCountry;
+        document.getElementById('optCity').innerText = t.optCity;
+        document.getElementById('optCategory').innerText = t.optCategory;
+        document.getElementById('groupMedical').label = t.groupMedical;
+        document.getElementById('groupCommercial').label = t.groupCommercial;
+        document.getElementById('groupService').label = t.groupService;
+        document.getElementById('optOtherCat').innerText = t.optOtherCat;
+        document.getElementById('note1').innerText = t.note1;
+        document.getElementById('note2').innerText = t.note2;
+        document.getElementById('note3').innerText = t.note3;
+        document.getElementById('note4').innerText = t.note4;
+        document.getElementById('goldTitle').innerText = t.goldTitle;
+        document.getElementById('goldDesc').innerText = t.goldDesc;
+        document.getElementById('goldPrice').innerHTML = t.goldPrice;
+        document.getElementById('goldBtn').innerText = t.goldBtn;
+        document.getElementById('silverTitle').innerText = t.silverTitle;
+        document.getElementById('silverDesc').innerText = t.silverDesc;
+        document.getElementById('silverPrice').innerHTML = t.silverPrice;
+        document.getElementById('silverBtn').innerText = t.silverBtn;
+        document.getElementById('globalPaymentDesc').innerText = t.globalPaymentDesc;
+        document.getElementById('adminLink').innerText = t.adminLink;
+        document.getElementById('copyText').innerText = t.copyText;
+        document.getElementById('results').innerHTML = "";
+    }
+
     window.loadCities = () => {
         const country = document.getElementById('country').value;
         const citySelect = document.getElementById('city');
-        citySelect.innerHTML = '<option value="">اختر المحافظة/المدينة</option>';
+        citySelect.innerHTML = `<option value="">${langData[currentLang].optCity}</option>`;
         if(locations[country]) {
             locations[country].forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
         }
-        citySelect.innerHTML += '<option value="غير ذلك">غير ذلك</option>';
+        citySelect.innerHTML += `<option value="غير ذلك">${langData[currentLang].optOtherCountry}</option>`;
     };
 
     let hasWelcomed = false;
     window.playWelcome = () => {
         if (hasWelcomed) return;
-        const msg = new SpeechSynthesisUtterance("أهلاً بك في منصة صوفي غرام العالمية، ماذا تحب أن تبحث؟");
-        msg.lang = 'ar-SA'; window.speechSynthesis.speak(msg);
+        const welcomeText = currentLang === 'ar' ? "أهلاً بك في منصة صوفي غرام العالمية، ماذا تحب أن تبحث؟" : "Welcome to Sofygram Global platform, what would you like to search?";
+        const msg = new SpeechSynthesisUtterance(welcomeText);
+        msg.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; 
+        window.speechSynthesis.speak(msg);
         hasWelcomed = true;
     };
 
     window.startSofyVoice = () => {
         const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'ar-SA'; rec.start();
+        rec.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; 
+        rec.start();
         document.getElementById('micBtn').classList.add('active');
         rec.onresult = (e) => {
             let t = e.results[0][0].transcript.replace(/[.؟?]/g, "");
             document.getElementById('manualSearch').value = t;
             document.getElementById('micBtn').classList.remove('active');
-            runSofySearch();
+            window.runSofySearch();
         };
         rec.onerror = () => document.getElementById('micBtn').classList.remove('active');
     };
@@ -209,7 +315,8 @@
         const q = document.getElementById('manualSearch').value.toLowerCase();
         const cityQ = document.getElementById('city').value;
         const resDiv = document.getElementById('results');
-        resDiv.innerHTML = "<p style='color:#888;'>جاري جلب البيانات الفورية...</p>";
+        const t = langData[currentLang];
+        resDiv.innerHTML = `<p style='color:#888;'>${t.searching}</p>`;
         
         const snap = await get(ref(db, 'users'));
         const data = snap.val(); resDiv.innerHTML = "";
@@ -220,19 +327,19 @@
             const matchCity = !cityQ || u.city === cityQ;
 
             if(matchName && matchCity) {
-                const area = u.neighborhood ? u.neighborhood : "المنطقة غير محددة";
+                const area = u.neighborhood ? u.neighborhood : t.areaDefault;
                 const currentNote = u.note ? u.note : "";
 
                 resDiv.innerHTML += `
                     <div class="res-item" onclick="location.href='view.html?id=${id}'">
                         <h3 class="res-name">${u.name}</h3>
                         <div class="res-meta"><i class="fas fa-map-marker-alt"></i> ${u.city || ''} - ${area}</div>
-                        <div class="res-meta"><i class="fas fa-phone-alt"></i> ${u.phone || 'غير متوفر'}</div>
-                        ${currentNote ? `<div class="res-note">📢 ملاحظة: ${currentNote}</div>` : ''}
+                        <div class="res-meta"><i class="fas fa-phone-alt"></i> ${u.phone || 'N/A'}</div>
+                        ${currentNote ? `<div class="res-note">📢 ${t.noteLabel}: ${currentNote}</div>` : ''}
                     </div>`;
             }
         }
-        if(resDiv.innerHTML === "") resDiv.innerHTML = "لم يتم العثور على نتائج تطابق بحثك.";
+        if(resDiv.innerHTML === "") resDiv.innerHTML = t.noRes;
     };
 </script>
 </body>
