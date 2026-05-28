@@ -93,7 +93,7 @@
                 <option value="" id="optCountry">اختر الدولة</option>
                 <option value="العراق">العراق 🇮🇶</option>
                 <option value="السعودية">السعودية 🇸🇦</option>
-                <option value="الإمارات">الإمارات 🇦ئه 🇦🇪</option>
+                <option value="الإمارات">الإمارات 🇦🇪</option>
                 <option value="الكويت">الكويت 🇰🇼</option>
                 <option value="قطر">قطر 🇶🇦</option>
                 <option value="مصر">مصر 🇪🇬</option>
@@ -170,7 +170,17 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
-    const firebaseConfig = { apiKey: "AIzaSyBqlRUshD3182zmliJrDUzBXQjL_eXSKtY", authDomain: "sofygramclinic.firebaseapp.com", databaseURL: "https://sofygramclinic-default-rtdb.firebaseio.com", projectId: "sofygramclinic", appId: "1:207475452149:web:3f0fbbcc1419bf9e6b7dbc" };
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RZrQGALFBU",
+        authDomain: "sofygram-mobile-app.firebaseapp.com",
+        databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+        projectId: "sofygram-mobile-app",
+        storageBucket: "sofygram-mobile-app.firebasestorage.app",
+        messagingSenderId: "190753733711",
+        appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
+    };
+
     const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
     const locations = {
@@ -200,7 +210,7 @@
             note1: "🌟 تنظيم الطوابير عالمياً", note2: "🕒 وداعاً للانتظار المزعج", note3: "🛰️ متابعة فورية لدورك", note4: "💎 فخامة وسهولة استخدام",
             goldTitle: "الاشتراك الذهبي", goldDesc: "للأطباء والعيادات", goldPrice: "20,000 <small>د.ع</small>", goldBtn: "اشترك الآن",
             silverTitle: "الاشتراك الفضي", silverDesc: "لكافة الأنشطة الأخرى", silverPrice: "15,000 <small>د.ع</small>", silverBtn: "اشترك الآن",
-            globalPaymentDesc: "للاشتراك من خارج العراق، تدعم المنصة بوابات الدفع العالمية (Stripe / PayPal) عند الانتقال لصفحة الاشتراك.",
+            globalPaymentDesc: "للاشتراك من خارج العراق, تدعم المنصة بوابات الدفع العالمية (Stripe / PayPal) عند الانتقال لصفحة الاشتراك.",
             adminLink: "🗝️ دخول السكرتير أو صاحب النشاط",
             copyText: "جميع الحقوق محفوظة لصالح منصة صوفيگرام العالمية © 2026",
             searching: "جاري جلب البيانات الفورية...", noRes: "لم يتم العثور على نتائج تطابق بحثك.",
