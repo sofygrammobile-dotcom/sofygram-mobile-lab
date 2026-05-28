@@ -7,65 +7,88 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --glow: #ffd700; --bg: #050a14; }
-        body { background: var(--bg); color: white; font-family: sans-serif; padding: 15px; margin: 0; }
-        .search-card { background: #121212; padding: 25px; border-radius: 30px; max-width: 600px; margin: 20px auto; border: 1px solid #222; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .search-title { color: var(--glow); font-size: 22px; margin-bottom: 20px; font-weight: bold; }
+        body { background: var(--bg); color: white; font-family: sans-serif; padding: 10px; margin: 0; }
+        .search-card { background: #000; padding: 20px; border-radius: 30px; max-width: 650px; margin: 20px auto; border: 2px solid #222; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .search-title { color: var(--glow); font-size: 20px; margin-bottom: 20px; font-weight: bold; text-align: center; }
         
-        .form-group { margin-bottom: 15px; text-align: right; }
-        label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; padding-right: 5px; }
-        select, input { width: 100%; padding: 14px; border-radius: 15px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        /* التنسيق الشبكي القديم (خانتين بجانب بعض) */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        
+        .form-group { text-align: right; }
+        select, input { width: 100%; padding: 16px; border-radius: 20px; border: 2px solid #111; background: #050a14; color: #fff; font-size: 16px; outline: none; box-sizing: border-box; font-weight: bold; text-align: center; }
         select:focus, input:focus { border-color: var(--glow); }
 
-        .btn-search { background: var(--glow); color: #000; padding: 16px; width: 100%; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .btn-search:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+        .btn-search { background: var(--glow); color: #000; padding: 18px; width: 100%; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 20px; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-search:hover { transform: scale(1.01); }
 
-        .results-container { max-width: 600px; margin: 20px auto; text-align: right; }
-        .clinic-row { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 18px; border-radius: 22px; margin-bottom: 12px; transition: 0.3s; border-right: 6px solid var(--glow); cursor: pointer; text-decoration: none; color: white; }
-        .clinic-row:hover { transform: translateY(-2px); background: #24334d; }
-        
-        .no-results { color: #e74c3c; font-weight: bold; margin-top: 20px; font-size: 16px; background: rgba(231, 76, 60, 0.1); padding: 15px; border-radius: 15px; border: 1px dashed #e74c3c; text-align: center; }
+        /* الأزرار الملونة السفلية الفخمة */
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 650px; margin: 20px auto; }
+        .feature-btn { background: #000; border: 1px solid #333; padding: 15px; border-radius: 20px; color: #fff; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+        .feature-btn i { color: var(--glow); }
+
+        .results-container { max-width: 650px; margin: 20px auto; text-align: right; }
+        .clinic-row { display: flex; justify-content: space-between; align-items: center; background: #121212; padding: 18px; border-radius: 22px; margin-bottom: 12px; transition: 0.3s; border-right: 6px solid var(--glow); cursor: pointer; text-decoration: none; color: white; border: 1px solid #222; }
+        .no-results { color: #fff; font-weight: bold; margin-top: 20px; font-size: 16px; text-align: center; background: #121212; padding: 15px; border-radius: 20px; border: 1px dashed #333; }
         .badge { background: rgba(255, 215, 0, 0.1); color: var(--glow); border: 1px solid var(--glow); padding: 3px 8px; border-radius: 8px; font-size: 12px; }
+        
+        @media (max-width: 500px) {
+            .grid-container, .features-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
     <div class="search-card">
-        <div class="search-title"><i class="fa-solid fa-wand-magic-sparkles"></i> البحث الصوتي الذكي</div>
+        <div class="search-title">البحث الصوتي الذكي</div>
         
-        <div class="form-group">
-            <label>اختر الدولة</label>
-            <select id="countrySelect" onchange="loadStates()">
-                <option value="">-- اختر الدولة --</option>
-                <option value="العراق">العراق 🇮🇶</option>
-                <option value="السعودية">السعودية 🇸🇦</option>
-                <option value="الإمارات">الإمارات 🇦🇪</option>
-            </select>
+        <div class="grid-container">
+            <div class="form-group">
+                <select id="countrySelect" onchange="loadStates()">
+                    <option value="">اختر الدولة</option>
+                    <option value="العراق">العراق 🇮🇶</option>
+                    <option value="السعودية">السعودية 🇸🇦</option>
+                    <option value="الإمارات">الإمارات 🇦🇪</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="stateSelect">
+                    <option value="">اختر المحافظة/المدينة</option>
+                </select>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>اختر المحافظة / المدينة</label>
-            <select id="stateSelect">
-                <option value="">-- اختر المحافظة أولاً --</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>اسم الطبيب أو العيادة (اختياري)</label>
-            <input type="text" id="nameSearch" placeholder="🔍 اكتب اسم الطبيب للبحث المباشر...">
+        <div class="grid-container">
+            <div class="form-group">
+                <select id="typeSelect">
+                    <option value="">نوع النشاط</option>
+                    <option value="دكتور">دكتور</option>
+                    <option value="مختبر">مختبر</option>
+                    <option value="صيدلية">صيدلية</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" id="nameSearch" placeholder="دكتور">
+            </div>
         </div>
 
         <button class="btn-search" onclick="performSearch()">
-            <i class="fa-solid fa-rocket"></i> ابحث الآن
+            🚀 ابحث الآن
         </button>
     </div>
 
     <div class="results-container" id="resultsList"></div>
 
+    <div class="features-grid">
+        <div class="feature-btn"><i class="fa-solid fa-star"></i> تنظيم الطوابير عالمياً</div>
+        <div class="feature-btn"><i class="fa-solid fa-clock"></i> وداعاً للانتظار المزعج</div>
+        <div class="feature-btn"><i class="fa-solid fa-bolt"></i> متابعة فورية لدورك</div>
+        <div class="feature-btn"><i class="fa-solid fa-gem"></i> فخامة وسهولة</div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
-        // الإعدادات الجديدة المأخوذة من لقطة الشاشة الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RZrQGALFBU",
             authDomain: "sofygram-mobile-app.firebaseapp.com",
@@ -79,17 +102,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // قائمة المحافظات والمدن المحدثة
         const locations = {
             "العراق": ["بغداد", "النجف", "كربلاء", "البصرة", "بابل", "الأنبار", "أربيل", "السليمانية", "دهوك", "ديالى", "ذي قار", "صلاح الدين", "كركوك", "ميسان", "المثنى", "نينوى", "القادسية", "واسط"],
-            "السعودية": ["الرياض", "جدة", "مكة", "المدينة", "الدمام", "الخبر", "أبها", "تبوك"],
-            "الإمارات": ["دبي", "أبوظبي", "الشارقة", "عجمان", "رأس الخيمة", "الفجيرة"]
+            "السعودية": ["الرياض", "جدة", "مكة", "المدينة"],
+            "الإمارات": ["دبي", "أبوظبي", "الشارقة"]
         };
 
         window.loadStates = () => {
             const country = document.getElementById('countrySelect').value;
             const stateSelect = document.getElementById('stateSelect');
-            stateSelect.innerHTML = '<option value="">-- كل المحافظات --</option>';
+            stateSelect.innerHTML = '<option value="">اختر المحافظة/المدينة</option>';
             
             if(country && locations[country]) {
                 locations[country].forEach(st => {
@@ -104,45 +126,42 @@
             const nameQuery = document.getElementById('nameSearch').value.toLowerCase().trim();
             const resultsList = document.getElementById('resultsList');
             
-            resultsList.innerHTML = '<p style="text-align:center; color:var(--glow);"><i class="fa-solid fa-spinner fa-spin"></i> جاري البحث في السيرفر الجديد...</p>';
+            resultsList.innerHTML = '<p style="text-align:center; color:var(--glow);"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب البيانات من السيرفر الجديد...</p>';
 
             get(ref(db, 'users')).then((snap) => {
                 resultsList.innerHTML = "";
                 const data = snap.val();
                 if(!data) {
-                    resultsList.innerHTML = '<div class="no-results">❌ لم يتم العثور على أي عيادات مسجلة حالياً.</div>';
+                    resultsList.innerHTML = '<div class="no-results">لم يتم العثور على نتائج تطابق بحثك.</div>';
                     return;
                 }
 
                 let found = false;
-                // تصفية وعرض المستخدمين النشطين فقط
                 Object.keys(data).forEach(id => {
                     const u = data[id];
                     
-                    // التحقق من فلاتر البحث والتوافق مع بنية السيرفر الجديد
                     const matchesCountry = !country || (u.country && u.country === country);
                     const matchesState = !state || (u.state && u.state === state);
                     const matchesName = !nameQuery || (u.name && u.name.toLowerCase().includes(nameQuery));
                     
-                    // إظهار الطبيب إذا كان حسابه نشطاً ومطابقاً للبحث
                     if(u.active && matchesCountry && matchesState && matchesName) {
                         found = true;
                         resultsList.innerHTML += `
                             <a href="view.html?id=${id}" class="clinic-row">
                                 <div>
-                                    <b style="font-size:18px;"><i class="fa-user-md fa-solid"></i> د. ${u.name}</b><br>
-                                    <small style="color:#aaa;"><i class="fa-solid fa-location-dot"></i> ${u.state || ''} - ${u.country || ''}</small>
+                                    <b style="font-size:18px;">د. ${u.name}</b><br>
+                                    <small style="color:#aaa;">${u.state || ''} - ${u.country || ''}</small>
                                 </div>
-                                <span class="badge"><i class="fa-solid fa-circle-check"></i> متصل</span>
+                                <span class="badge">متصل</span>
                             </a>`;
                     }
                 });
 
                 if(!found) {
-                    resultsList.innerHTML = '<div class="no-results">لم يتم العثور على نتائج تطابق بحثك الحالي. 🔍</div>';
+                    resultsList.innerHTML = '<div class="no-results">لم يتم العثور على نتائج تطابق بحثك.</div>';
                 }
             }).catch(err => {
-                resultsList.innerHTML = `<div class="no-results">خطأ في الاتصال بقاعدة البيانات: ${err.message}</div>`;
+                resultsList.innerHTML = `<div class="no-results">خطأ في الاتصال: ${err.message}</div>`;
             });
         };
     </script>
