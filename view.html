@@ -1,64 +1,76 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sofygram Live | صوفيگرام المباشر 🛰️</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold: #ffd700; --neon: #ff4500; --bg: #050a14; }
         body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 10px; padding-bottom: 140px; }
         
-        .logo-top img { width: 150px; margin-top: 15px; filter: drop-shadow(0 0 10px var(--gold)); }
+        /* شريط تبديل اللغة أعلى الشاشة */
+        .header-controls { display: flex; justify-content: flex-end; max-width: 350px; margin: 5px auto 0 auto; padding: 0 10px; }
+        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; }
+
+        .logo-top img { width: 150px; margin-top: 5px; filter: drop-shadow(0 0 10px var(--gold)); }
 
         /* شريط البطاقات السفلي المتعدد */
-        #multiSessionContainer { position: fixed; bottom: 15px; left: 0; width: 100%; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 10px 20px; gap: 15px; z-index: 3000; justify-content: flex-start; scrollbar-width: none; }
+        #multiSessionContainer { position: fixed; bottom: 15px; left: 0; width: 100%; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 10px 20px; gap: 15px; z-index: 3000; justify-content: flex-start; scrollbar-width: none; box-sizing: border-box; }
         #multiSessionContainer::-webkit-scrollbar { display: none; }
-        .mini-card { min-width: 140px; background: rgba(18, 18, 18, 0.95); border: 2px solid var(--gold); border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: pointer; text-align: center; }
+        .mini-card { min-width: 140px; background: rgba(18, 18, 18, 0.95); border: 2px solid var(--gold); border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: pointer; text-align: center; box-sizing: border-box; }
         .mc-name { font-size: 13px; font-weight: bold; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mc-num { font-size: 35px; font-weight: bold; margin: 5px 0; color: var(--gold); }
         .mc-close { position: absolute; top: -10px; right: -10px; background: #fff; color: #000; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; display: flex; align-items: center; justify-content: center; z-index: 10; }
 
         /* واجهة العرض الأساسية */
-        .number-box { background: #121212; border: 3px solid var(--gold); border-radius: 45px; padding: 35px; max-width: 320px; margin: 20px auto; box-shadow: 0 0 30px var(--gold); }
+        .number-box { background: #121212; border: 3px solid var(--gold); border-radius: 45px; padding: 35px; max-width: 320px; margin: 20px auto; box-shadow: 0 0 30px var(--gold); box-sizing: border-box; }
         .big-num { font-size: 110px; font-weight: bold; margin: 5px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .clinic-title { color: var(--gold); font-size: 28px; margin-bottom: 5px; }
+        .clinic-title { color: var(--gold); font-size: 28px; margin-bottom: 5px; padding: 0 10px; }
         
-        .card-ui { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 35px; border: 1px solid #1e293b; max-width: 350px; margin: 20px auto; }
-        input { padding: 15px; border-radius: 15px; border: 2px solid var(--gold); background: #000; color: #fff; text-align: center; width: 80px; font-size: 22px; outline: none; }
+        .card-ui { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 35px; border: 1px solid #1e293b; max-width: 350px; margin: 20px auto; box-sizing: border-box; }
+        input { padding: 15px; border-radius: 15px; border: 2px solid var(--gold); background: #000; color: #fff; text-align: center; width: 100px; font-size: 22px; outline: none; box-sizing: border-box; }
         
-        .bell-btn { font-size: 70px; background: none; border: none; filter: grayscale(1); cursor: pointer; transition: 0.3s; }
+        .bell-btn { font-size: 70px; background: none; border: none; filter: grayscale(1); cursor: pointer; transition: 0.3s; margin-top: 10px; padding: 0; outline: none; }
         .bell-active { filter: grayscale(0) drop-shadow(0 0 20px var(--gold)); animation: ring 1s infinite; }
         
         @keyframes ring { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
 
-        .btn-back { background: rgba(255,255,255,0.05); color: #888; border: 1px solid #333; padding: 15px; border-radius: 15px; width: 90%; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .btn-back { background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid #333; padding: 15px; border-radius: 15px; width: 90%; max-width: 350px; cursor: pointer; font-size: 15px; margin-top: 10px; font-weight: bold; }
+        
+        /* توافق الاتجاهات للغة الإنجليزية لتعديل زر الإغلاق الفرعي */
+        body.en-mode .mc-close { right: auto; left: -10px; }
     </style>
 </head>
-<body>
+<body class="ar-mode">
+
+    <!-- شريط تبديل اللغة -->
+    <div class="header-controls">
+        <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+    </div>
 
     <div id="multiSessionContainer"></div>
-    <div class="logo-top"><img src="logo.png"></div>
+    <div class="logo-top"><img src="logo.png" onerror="this.src='https://sofygram.com/logo.png'"></div>
 
     <div id="livePage">
         <h2 id="clinicName" class="clinic-title">جاري التحميل...</h2>
         <div id="statusTag" style="display:inline-block; padding:8px 25px; border-radius:50px; font-size:14px; border:2px solid var(--gold); color:var(--gold); margin-bottom:15px;">--</div>
         
         <div class="number-box">
-            <p style="color:#888; font-size:14px; margin:0;">الرقم الحالي الآن</p>
+            <p style="color:#888; font-size:14px; margin:0;" id="txtCurrentLabel">الرقم الحالي الآن</p>
             <div class="big-num" id="liveNumber">0</div>
             <div id="liveNote" style="background:rgba(255,215,0,0.1); border:1px dashed var(--gold); padding:12px; border-radius:15px; margin-top:10px; color:var(--gold); font-weight:bold; display:none;"></div>
         </div>
 
         <div class="card-ui">
-            <p style="color:var(--gold); font-weight:bold; margin-bottom:15px;">🔔 منبه ساعة الصفر (نداء المترو)</p>
+            <p style="color:var(--gold); font-weight:bold; margin-bottom:15px;" id="txtAlarmTitle">🔔 منبه ساعة الصفر (نداء المترو)</p>
             <input type="number" id="userTarget" placeholder="0">
             <br>
             <button id="bellIcon" class="bell-btn" onclick="toggleAlarm()">🔔</button>
-            <p style="font-size:12px; color:#666; margin-top:10px;">سيتم نداء رقمك بالعربي والإنكليزي فور وصول السرا</p>
+            <p style="font-size:12px; color:#666; margin-top:10px;" id="txtAlarmDesc">سيتم نداء رقمك بالعربي والإنكليزي فور وصول السرا</p>
         </div>
         
-        <button class="btn-back" onclick="location.href='index.html'">🔍 العودة للبحث عن نشاط آخر</button>
+        <button class="btn-back" onclick="location.href='index.html'" id="txtBackBtn">🔍 العودة للبحث عن نشاط آخر</button>
     </div>
 
     <script type="module">
@@ -79,22 +91,80 @@
         const id = params.get('id');
         let activeSessions = JSON.parse(localStorage.getItem('sofygramSessions')) || [];
         let isAlarmReady = false;
+        let currentLang = 'ar';
+
+        // القاموس اللغوي للواجهة والمستودع
+        const translations = {
+            ar: {
+                loading: "جاري التحميل...",
+                currentLabel: "الرقم الحالي الآن",
+                alarmTitle: "🔔 منبه ساعة الصفر (نداء المترو)",
+                alarmDesc: "سيتم نداء رقمك بالعربي والإنكليزي فور وصول السرا",
+                backBtn: "🔍 العودة للبحث عن نشاط آخر",
+                alertInputNumber: "يرجى إدخال رقمك أولاً 🔔",
+                alertNotification: "🔔 صوفيگرام: حان دورك الآن!",
+                statusConnected: "متصل"
+            },
+            en: {
+                loading: "Loading...",
+                currentLabel: "Current Number Now",
+                alarmTitle: "🔔 Zero Hour Alarm (Metro Call)",
+                alarmDesc: "Your number will be called in Arabic and English upon arrival",
+                backBtn: "🔍 Back to Search for Another Activity",
+                alertInputNumber: "Please enter your number first 🔔",
+                alertNotification: "🔔 Sofygram: It is your turn now!",
+                statusConnected: "Connected"
+            }
+        };
+
+        window.toggleLanguage = () => {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            updateUI();
+        };
+
+        function updateUI() {
+            const t = translations[currentLang];
+            const htmlTag = document.getElementById('htmlTag');
+            
+            if(currentLang === 'ar') {
+                htmlTag.setAttribute('dir', 'rtl');
+                htmlTag.setAttribute('lang', 'ar');
+                document.body.className = "ar-mode";
+                document.getElementById('langBtn').innerText = "English";
+            } else {
+                htmlTag.setAttribute('dir', 'ltr');
+                htmlTag.setAttribute('lang', 'en');
+                document.body.className = "en-mode";
+                document.getElementById('langBtn').innerText = "العربية";
+            }
+
+            document.getElementById('txtCurrentLabel').innerText = t.currentLabel;
+            document.getElementById('txtAlarmTitle').innerText = t.alarmTitle;
+            document.getElementById('txtAlarmDesc').innerText = t.alarmDesc;
+            document.getElementById('txtBackBtn').innerText = t.backBtn;
+            
+            const clinicNameEl = document.getElementById('clinicName');
+            if(clinicNameEl.innerText === "جاري التحميل..." || clinicNameEl.innerText === "Loading...") {
+                clinicNameEl.innerText = t.loading;
+            }
+        }
 
         if(id) { 
             startTracking(id); 
             addToSessions(id); 
         }
-        window.addEventListener('load', renderMultiCards);
+        window.addEventListener('load', () => {
+            updateUI();
+            renderMultiCards();
+        });
 
-        // وظيفة نداء مترو دبي (بنت وولد)
+        // وظيفة نداء مترو دبي الصوتي الثنائي المتطور
         function triggerMetroAlarm() {
             const synth = window.speechSynthesis;
-            // نداء الولد (عربي)
             const msgAr = new SpeechSynthesisUtterance("أهلاً بكم في منصة صوفي غرام العالمية. حان موعدكم الآن، يرجى التوجه حالاً. شكراً لكم.");
             msgAr.lang = 'ar-SA';
             msgAr.rate = 0.9;
             
-            // نداء البنت (إنكليزي)
             const msgEn = new SpeechSynthesisUtterance("Welcome to Sofygram Global. It is your turn now, please proceed immediately. Thank you.");
             msgEn.lang = 'en-US';
             msgEn.rate = 1.0;
@@ -102,7 +172,7 @@
             synth.speak(msgAr);
             synth.speak(msgEn);
             if ("vibrate" in navigator) { navigator.vibrate([500, 200, 500, 200, 500]); }
-            alert("🔔 صوفيگرام: حان دورك الآن!");
+            alert(translations[currentLang].alertNotification);
         }
 
         function startTracking(targetId) {
@@ -112,13 +182,13 @@
                 
                 document.getElementById('liveNumber').innerText = current;
                 document.getElementById('clinicName').innerText = info.name;
-                document.getElementById('statusTag').innerText = info.status || "متصل";
+                document.getElementById('statusTag').innerText = info.status || translations[currentLang].statusConnected;
                 
                 const noteBox = document.getElementById('liveNote');
                 if(info.note) { noteBox.innerText = info.note; noteBox.style.display = "block"; } 
                 else { noteBox.style.display = "none"; }
 
-                // فحص المنبه
+                // فحص ومطابقة العداد لتشغيل التنبيه المباشر
                 const target = document.getElementById('userTarget').value;
                 if(isAlarmReady && target == current && current != 0) {
                     triggerMetroAlarm();
@@ -163,13 +233,21 @@
             activeSessions = activeSessions.filter(i => i !== sid);
             localStorage.setItem('sofygramSessions', JSON.stringify(activeSessions));
             renderMultiCards();
+            // إذا قمنا بإلغاء الجلسة المفتوحة حالياً، نعيد توجيهه للصفحة الرئيسية أو لأول جلسة متبقية
+            if(id === sid) {
+                if(activeSessions.length > 0) {
+                    location.href = 'view.html?id=' + activeSessions[0];
+                } else {
+                    location.href = 'index.html';
+                }
+            }
         };
 
         window.toggleAlarm = () => {
-            if(!document.getElementById('userTarget').value) return alert("يرجى إدخال رقمك أولاً 🔔");
+            if(!document.getElementById('userTarget').value) return alert(translations[currentLang].alertInputNumber);
             isAlarmReady = !isAlarmReady;
             document.getElementById('bellIcon').classList.toggle('bell-active');
-            // تفعيل محرك الصوت (لازم تفاعل من المستخدم أول مرة)
+            // تحفيز أولي لمحرك نطق المتصفح لضمان تخطي قيود حماية الصوت على أنظمة الموبايل iOS/Android
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
         };
     </script>
