@@ -1,61 +1,100 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofygram Live | صوفيگرام المباشر 🛰️</title>
+    <title>Sofygram | تفاصيل العيادة ⚕️</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #ffd700; --neon: #ff4500; --bg: #050a14; }
-        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 10px; padding-bottom: 140px; }
+        :root { --glow: #2ecc71; --gold: #ffd700; --bg: #050a14; }
+        body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; padding: 20px; margin: 0; }
+        .profile-card { background: #121212; padding: 30px; border-radius: 35px; max-width: 500px; margin: 30px auto; border: 1px solid #222; box-shadow: 0 0 25px rgba(0,0,0,0.6); text-align: right; }
+        .avatar-area { text-align: center; margin-bottom: 20px; }
+        .avatar-area i { id: profileIcon; font-size: 70px; color: var(--gold); background: rgba(255,215,0,0.1); padding: 20px; border-radius: 50%; border: 1px solid var(--gold); }
         
-        /* شريط تبديل اللغة أعلى الشاشة */
-        .header-controls { display: flex; justify-content: flex-end; max-width: 350px; margin: 5px auto 0 auto; padding: 0 10px; }
-        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; }
-
-        .logo-top img { width: 150px; margin-top: 5px; filter: drop-shadow(0 0 10px var(--gold)); }
-
-        /* شريط البطاقات السفلي المتعدد */
-        #multiSessionContainer { position: fixed; bottom: 15px; left: 0; width: 100%; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 10px 20px; gap: 15px; z-index: 3000; justify-content: flex-start; scrollbar-width: none; box-sizing: border-box; }
-        #multiSessionContainer::-webkit-scrollbar { display: none; }
-        .mini-card { min-width: 140px; background: rgba(18, 18, 18, 0.95); border: 2px solid var(--gold); border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: pointer; text-align: center; box-sizing: border-box; }
-        .mc-name { font-size: 13px; font-weight: bold; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mc-num { font-size: 35px; font-weight: bold; margin: 5px 0; color: var(--gold); }
-        .mc-close { position: absolute; top: -10px; right: -10px; background: #fff; color: #000; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; display: flex; align-items: center; justify-content: center; z-index: 10; }
-
-        /* واجهة العرض الأساسية */
-        .number-box { background: #121212; border: 3px solid var(--gold); border-radius: 45px; padding: 35px; max-width: 320px; margin: 20px auto; box-shadow: 0 0 30px var(--gold); box-sizing: border-box; }
-        .big-num { font-size: 110px; font-weight: bold; margin: 5px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .clinic-title { color: var(--gold); font-size: 28px; margin-bottom: 5px; padding: 0 10px; }
+        .info-item { background: #1e293b; padding: 14px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border-left: 5px solid var(--gold); }
+        .info-item i { color: var(--gold); font-size: 18px; width: 25px; text-align: center; }
         
-        .card-ui { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 35px; border: 1px solid #1e293b; max-width: 350px; margin: 20px auto; box-sizing: border-box; }
-        input { padding: 15px; border-radius: 15px; border: 2px solid var(--gold); background: #000; color: #fff; text-align: center; width: 100px; font-size: 22px; outline: none; box-sizing: border-box; }
-        
-        .bell-btn { font-size: 70px; background: none; border: none; filter: grayscale(1); cursor: pointer; transition: 0.3s; margin-top: 10px; padding: 0; outline: none; }
-        .bell-active { filter: grayscale(0) drop-shadow(0 0 20px var(--gold)); animation: ring 1s infinite; }
-        
-        @keyframes ring { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
-
-        .btn-back { background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid #333; padding: 15px; border-radius: 15px; width: 90%; max-width: 350px; cursor: pointer; font-size: 15px; margin-top: 10px; font-weight: bold; }
-        
-        /* توافق الاتجاهات للغة الإنجليزية لتعديل زر الإغلاق الفرعي */
-        body.en-mode .mc-close { right: auto; left: -10px; }
+        .btn-back { background: rgba(255,255,255,0.1); color: #fff; padding: 12px 25px; border: 1px solid #444; border-radius: 20px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 20px; transition: 0.3s; }
+        .btn-back:hover { background: #fff; color: #000; }
     </style>
 </head>
-<body class="ar-mode">
+<body>
 
-    <div class="header-controls">
-        <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+    <div class="profile-card" id="profileCard">
+        <p style="text-align:center; color:var(--gold);"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب ملف الطبيب...</p>
     </div>
 
-    <div id="multiSessionContainer"></div>
-    <div class="logo-top"><img src="logo.png" onerror="this.src='https://sofygram.com/logo.png'"></div>
+    <div style="text-align: center;">
+        <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-right"></i> العودة للبحث</a>
+    </div>
 
-    <div id="livePage">
-        <h2 id="clinicName" class="clinic-title">جاري التحميل...</h2>
-        <div id="statusTag" style="display:inline-block; padding:8px 25px; border-radius:50px; font-size:14px; border:2px solid var(--gold); color:var(--gold); margin-bottom:15px;">--</div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RZrQGALFBU",
+            authDomain: "sofygram-mobile-app.firebaseapp.com",
+            databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+            projectId: "sofygram-mobile-app",
+            storageBucket: "sofygram-mobile-app.firebasestorage.app",
+            messagingSenderId: "190753733711",
+            appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
+        };
         
-        <div class="number-box">
-            <p style="color:#888; font-size:14px; margin:0;" id="txtCurrentLabel">الرقم الحالي الآن</p>
-            <div class="big-num" id="liveNumber">0</div>
-            <div id="liveNote" style="background:rgba(255,215,0,0.1); border:1px dashed var(--gold); padding:12px; border-radius:15px; margin-top:1
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const clinicId = urlParams.get('id');
+
+        const card = document.getElementById('profileCard');
+
+        if(!clinicId) {
+            card.innerHTML = '<p style="text-align:center; color:#e74c3c;">⚠️ عذراً، لم يتم تحديد معرف العيادة بشكل صحيح.</p>';
+        } else {
+            get(ref(db, `users/${clinicId}`)).then((snap) => {
+                const u = snap.val();
+                if(!u) {
+                    card.innerHTML = '<p style="text-align:center; color:#e74c3c;">⚠️ العيادة المطلوبة غير موجودة أو انتهت صلاحيتها.</p>';
+                    return;
+                }
+
+                card.innerHTML = `
+                    <div class="avatar-area">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        <h2 style="color:var(--gold); margin-top:15px; text-align:center;">د. ${u.name || 'غير محدد'}</h2>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <div>
+                            <small style="color:#aaa; display:block;">العنوان والمنطقة</small>
+                            <b>${u.state || ''} - ${u.country || ''}</b>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <div>
+                            <small style="color:#aaa; display:block;">رقم الهاتف</small>
+                            <b>${u.phone || '---'}</b>
+                        </div>
+                    </div>
+
+                    <div class="info-item" style="border-left-color: var(--glow);">
+                        <i class="fa-solid fa-circle-check" style="color:var(--glow);"></i>
+                        <div>
+                            <small style="color:#aaa; display:block;">حالة الحساب</small>
+                            <b style="color:var(--glow);">عيادة معتمدة ونشطة ✅</b>
+                        </div>
+                    </div>
+                `;
+            }).catch(err => {
+                card.innerHTML = `<p style="text-align:center; color:#e74c3c;">خطأ أثناء تحميل البيانات: ${err.message}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
