@@ -1,35 +1,51 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sofygram Admin | دخول السيطرة 🔐</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --glow: #ffd700; }
         body { background: #050a14; color: white; font-family: sans-serif; text-align: center; padding: 15px; margin: 0; }
+        
+        /* زر تبديل اللغة أعلى الشاشة */
+        .lang-switcher { display: flex; justify-content: flex-end; max-width: 450px; margin: 0 auto 10px auto; }
+        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glow); color: var(--glow); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
         .admin-card { background: #121212; padding: 25px; border-radius: 30px; max-width: 450px; margin: auto; border: 1px solid var(--glow); box-shadow: 0 0 25px rgba(255, 215, 0, 0.1); }
         .num-display { font-size: 110px; font-weight: bold; color: #fff; margin: 10px 0; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .btn-round { width: 85px; height: 85px; border-radius: 50%; border: none; font-size: 45px; cursor: pointer; color: white; margin: 10px; transition: 0.3s; }
+        .btn-round { width: 85px; height: 85px; border-radius: 50%; border: none; font-size: 45px; cursor: pointer; color: white; margin: 10px; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; }
         .plus { background: #2ecc71; box-shadow: 0 0 15px #2ecc71; }
         .minus { background: #e74c3c; box-shadow: 0 0 15px #e74c3c; }
-        input, textarea, select { width: 90%; padding: 12px; margin: 8px 0; border-radius: 12px; background: #1e293b; color: white; border: 1px solid #333; text-align: center; }
-        .btn-save { background: var(--glow); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; width: 95%; cursor: pointer; margin-top: 10px; }
+        input, textarea, select { width: 90%; padding: 12px; margin: 8px 0; border-radius: 12px; background: #1e293b; color: white; border: 1px solid #333; text-align: center; font-size: 15px; outline: none; box-sizing: border-box; }
+        .btn-save { background: var(--glow); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; width: 95%; cursor: pointer; margin-top: 10px; font-size: 16px; }
         .tools-grid { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; }
         #qr-area { background: white; padding: 10px; border-radius: 12px; display: inline-block; }
+        
+        body.en-mode textarea { text-align: left; }
+        body.en-mode input { text-align: left; }
     </style>
 </head>
-<body>
+<body class="ar-mode">
 
-    <div id="loginBox" class="admin-card">
-        <img src="logo.png" style="width:140px; margin-bottom:20px;" onerror="this.src='https://sofygram.com/logo.png'">
-        <h2 style="color:var(--glow);">دخول الإدارة والسكرتارية 🔐</h2>
-        <input type="text" id="u" placeholder="اسم المستخدم (مثل: hf2026)">
-        <input type="password" id="p" placeholder="كلمة المرور">
-        <button onclick="login()" class="btn-save">دخول</button>
+    <!-- زر تغيير اللغة -->
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
     </div>
 
+    <!-- صندوق تسجيل الدخول -->
+    <div id="loginBox" class="admin-card">
+        <img src="logo.png" style="width:140px; margin-bottom:20px;" onerror="this.src='https://sofygram.com/logo.png'">
+        <h2 style="color:var(--glow);" id="txtLoginTitle">دخول الإدارة والسكرتارية 🔐</h2>
+        <input type="text" id="u" placeholder="اسم المستخدم (مثل: hf2026)">
+        <input type="password" id="p" placeholder="كلمة المرور">
+        <button onclick="login()" class="btn-save" id="txtLoginBtn">دخول</button>
+    </div>
+
+    <!-- لوحة التحكم بعد تسجيل الدخول -->
     <div id="controlBox" class="admin-card" style="display:none;">
         <h2 id="cName" style="color:var(--glow); margin:0;"></h2>
         <div class="num-display" id="n">0</div>
@@ -38,19 +54,20 @@
             <button class="btn-round plus" onclick="ch(1)">+</button>
         </div>
         <select id="st">
-            <option value="🟢 مفتوح الآن | Open">🟢 مفتوح الآن</option>
-            <option value="🟡 قريباً | Soon">🟡 قريباً</option>
-            <option value="🔴 مغلق | Closed">🔴 مغلق</option>
+            <option value="🟢 مفتوح الآن | Open" id="optOpen">🟢 مفتوح الآن</option>
+            <option value="🟡 قريباً | Soon" id="optSoon">🟡 قريباً</option>
+            <option value="🔴 مغلق | Closed" id="optClosed">🔴 مغلق</option>
         </select>
         <textarea id="nt" placeholder="اكتب ملاحظة للمراجعين..."></textarea>
-        <button onclick="upDetails()" class="btn-save">تحديث البيانات 🚀</button>
+        <button onclick="upDetails()" class="btn-save" id="txtUpdateBtn">تحديث البيانات 🚀</button>
+        
         <div class="tools-grid">
-            <div style="text-align: left; width: 45%;">
-                <button onclick="resetNum()" style="background:none; color: #e74c3c; border: 1px solid #e74c3c; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">🔄 تصفير العداد</button>
+            <div style="text-align: left; width: 45%;" id="resetArea">
+                <button onclick="resetNum()" id="txtResetBtn" style="background:none; color: #e74c3c; border: 1px solid #e74c3c; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">🔄 تصفير العداد</button>
             </div>
-            <div style="text-align: right; width: 45%;">
+            <div style="text-align: right; width: 45%;" id="qrArea">
                 <div id="qr-area"></div>
-                <button style="background: #3498db; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 11px; margin-top: 8px; cursor: pointer; width: 100%;" onclick="downloadQR()">💾 حفظ الباركود</button>
+                <button style="background: #3498db; color: white; border: none; padding: 7px; border-radius: 5px; font-size: 11px; margin-top: 8px; cursor: pointer; width: 100%; font-weight: bold;" onclick="downloadQR()" id="txtSaveQrBtn">💾 حفظ الباركود</button>
             </div>
         </div>
     </div>
@@ -67,13 +84,98 @@
         const db = getDatabase(app);
 
         let curUser = ""; let curNum = 0;
+        let currentLang = 'ar';
+
+        // القاموس اللغوي للترجمة الفورية داخل لوحة التحكم
+        const translations = {
+            ar: {
+                loginTitle: "دخول الإدارة والسكرتارية 🔐",
+                uPlaceholder: "اسم المستخدم (مثل: hf2026)",
+                pPlaceholder: "كلمة المرور",
+                loginBtn: "دخول",
+                optOpen: "🟢 مفتوح الآن",
+                optSoon: "🟡 قريباً",
+                optClosed: "🔴 مغلق",
+                ntPlaceholder: "اكتب ملاحظة للمراجعين...",
+                updateBtn: "تحديث البيانات 🚀",
+                resetBtn: "🔄 تصفير العداد",
+                saveQrBtn: "💾 حفظ الباركود",
+                alertInput: "يرجى إدخال البيانات",
+                alertWelcomeStaff: "أهلاً بك يا فريق الإدارة ✅",
+                alertNotActive: "⚠️ الحساب موجود ولكنه غير مفعل. يرجى تفعيله من لوحة الماستر.",
+                alertWrongPass: "رمز المرور خاطئ ❌",
+                alertNoUser: "اسم المستخدم غير موجود ❌ (تأكد من الحروف الكبيرة والصغيرة)",
+                alertFailConnect: "فشل الاتصال بالخادم",
+                alertUpdateSuccess: "تم التحديث ✅",
+                confirmReset: "تصفير العداد؟"
+            },
+            en: {
+                loginTitle: "Dashboard & Secretary Login 🔐",
+                uPlaceholder: "Username (e.g., hf2026)",
+                pPlaceholder: "Password",
+                loginBtn: "Login",
+                optOpen: "🟢 Open Now",
+                optSoon: "🟡 Soon",
+                optClosed: "🔴 Closed",
+                ntPlaceholder: "Write a note for patients/clients...",
+                updateBtn: "Update Data 🚀",
+                resetBtn: "🔄 Reset Counter",
+                saveQrBtn: "💾 Save QR Code",
+                alertInput: "Please enter your data",
+                alertWelcomeStaff: "Welcome, Administration Team ✅",
+                alertNotActive: "⚠️ Account exists but is not activated. Please activate it from the master panel.",
+                alertWrongPass: "Incorrect password ❌",
+                alertNoUser: "Username not found ❌ (Check uppercase/lowercase)",
+                alertFailConnect: "Failed to connect to server",
+                alertUpdateSuccess: "Updated Successfully ✅",
+                confirmReset: "Reset the counter?"
+            }
+        };
+
+        window.toggleLanguage = () => {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            updateUI();
+        };
+
+        function updateUI() {
+            const t = translations[currentLang];
+            const htmlTag = document.getElementById('htmlTag');
+            
+            if(currentLang === 'ar') {
+                htmlTag.setAttribute('dir', 'rtl');
+                htmlTag.setAttribute('lang', 'ar');
+                document.body.className = "ar-mode";
+                document.getElementById('langBtn').innerText = "English";
+                document.getElementById('resetArea').style.textAlign = 'left';
+                document.getElementById('qrArea').style.textAlign = 'right';
+            } else {
+                htmlTag.setAttribute('dir', 'ltr');
+                htmlTag.setAttribute('lang', 'en');
+                document.body.className = "en-mode";
+                document.getElementById('langBtn').innerText = "العربية";
+                document.getElementById('resetArea').style.textAlign = 'right';
+                document.getElementById('qrArea').style.textAlign = 'left';
+            }
+
+            document.getElementById('txtLoginTitle').innerText = t.loginTitle;
+            document.getElementById('u').placeholder = t.uPlaceholder;
+            document.getElementById('p').placeholder = t.pPlaceholder;
+            document.getElementById('txtLoginBtn').innerText = t.loginBtn;
+            document.getElementById('optOpen').innerText = t.optOpen;
+            document.getElementById('optSoon').innerText = t.optSoon;
+            document.getElementById('optClosed').innerText = t.optClosed;
+            document.getElementById('nt').placeholder = t.ntPlaceholder;
+            document.getElementById('txtUpdateBtn').innerText = t.updateBtn;
+            document.getElementById('txtResetBtn').innerText = t.resetBtn;
+            document.getElementById('txtSaveQrBtn').innerText = t.saveQrBtn;
+        }
 
         window.login = async () => {
-            // تم حذف .toLowerCase() لضمان قبول جميع أنواع الحسابات
             const user = document.getElementById('u').value.trim();
             const pass = document.getElementById('p').value.trim();
+            const t = translations[currentLang];
 
-            if(!user || !pass) return alert("يرجى إدخال البيانات");
+            if(!user || !pass) return alert(t.alertInput);
 
             // 1. فحص المعاونين/المدراء (Staff)
             const staffSnap = await get(ref(db, 'staff'));
@@ -83,7 +185,7 @@
                     if(staffData[id].name === user && staffData[id].password === pass) {
                         sessionStorage.setItem('staff_auth', 'true');
                         sessionStorage.setItem('staff_name', user);
-                        alert("أهلاً بك يا فريق الإدارة ✅");
+                        alert(t.alertWelcomeStaff);
                         location.href = 'staff_work.html';
                         return;
                     }
@@ -95,16 +197,16 @@
                 if(s.exists()) {
                     const userData = s.val();
                     if(userData.password == pass) {
-                        // تعديل شرط التفعيل ليكون أكثر مرونة
                         if(userData.active === true || userData.active === "true") {
                             curUser = user;
                             document.getElementById('loginBox').style.display = 'none';
                             document.getElementById('controlBox').style.display = 'block';
                             
-                            // توليد الباركود بالرابط الجديد
+                            // توليد الباركود ديناميكياً بناءً على النطاق الحالي للبيئة المعزولة للموبايل
                             document.getElementById("qr-area").innerHTML = ""; 
+                            const currentOrigin = window.location.origin + window.location.pathname.replace('admin.html', '');
                             new QRCode(document.getElementById("qr-area"), {
-                                text: `https://sofygram.com/view.html?id=${curUser}`,
+                                text: `${currentOrigin}view.html?id=${curUser}`,
                                 width: 80, height: 80
                             });
 
@@ -113,23 +215,23 @@
                                 if(d) {
                                     curNum = d.currentNum || 0;
                                     document.getElementById('n').innerText = curNum;
-                                    document.getElementById('cName').innerText = d.name || "بدون اسم";
+                                    document.getElementById('cName').innerText = d.name || "N/A";
                                     if(d.note) document.getElementById('nt').value = d.note;
                                     if(d.status) document.getElementById('st').value = d.status;
                                 }
                             });
                         } else {
-                            alert("⚠️ الحساب موجود ولكنه غير مفعل. يرجى تفعيله من لوحة الماستر.");
+                            alert(t.alertNotActive);
                         }
                     } else {
-                        alert("رمز المرور خاطئ ❌");
+                        alert(t.alertWrongPass);
                     }
                 } else {
-                    alert("اسم المستخدم غير موجود ❌ (تأكد من الحروف الكبيرة والصغيرة)");
+                    alert(t.alertNoUser);
                 }
             }).catch(e => {
                 console.error(e);
-                alert("فشل الاتصال بالخادم");
+                alert(t.alertFailConnect);
             });
         };
 
@@ -140,11 +242,11 @@
 
         window.upDetails = () => {
             update(ref(db, `users/${curUser}`), { status: document.getElementById('st').value, note: document.getElementById('nt').value })
-            .then(() => alert("تم التحديث ✅"));
+            .then(() => alert(translations[currentLang].alertUpdateSuccess));
         };
 
         window.resetNum = () => {
-            if(confirm("تصفير العداد؟")) update(ref(db, `users/${curUser}`), { currentNum: 0 });
+            if(confirm(translations[currentLang].confirmReset)) update(ref(db, `users/${curUser}`), { currentNum: 0 });
         };
 
         window.downloadQR = () => {
@@ -155,6 +257,8 @@
                 link.click();
             });
         };
+
+        window.onload = updateUI;
     </script>
 </body>
 </html>
