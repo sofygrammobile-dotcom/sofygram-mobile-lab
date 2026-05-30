@@ -158,8 +158,8 @@
                 password: pass, active: false, regDate: new Date().toISOString(),
                 currentNum: 0, status: "مفتوح الآن"
             }).then(() => {
-                if (plan === 'gold') window.location.href = `pay20.html?user=${user}`;
-                else window.location.href = `pay.html?user=${user}`;
+                if (plan === 'gold') window.location.href = `pay20.html?user=${user}&name=${encodeURIComponent(name)}`;
+else window.location.href = `pay.html?user=${user}&name=${encodeURIComponent(name)}`;
             });
         };
     </script>
