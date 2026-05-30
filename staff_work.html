@@ -56,52 +56,7 @@
             document.getElementById('staffInfo').innerText = "المعاون: " + sessionStorage.getItem('staff_name');
         }
 
-        const firebaseConfig = { apiKey: "AIzaSyBqlRUshD3182zmliJrDUzBXQjL_eXSKtY", databaseURL: "https://sofygramclinic-default-rtdb.firebaseio.com" };
-        const app = initializeApp(firebaseConfig); const db = getDatabase(app);
-
-        onValue(ref(db, 'users'), (snap) => {
-            const data = snap.val(); const list = document.getElementById('list'); list.innerHTML = "";
-            if(!data) return;
-
-            let users = Object.keys(data).map(id => ({id, ...data[id]}));
-            document.getElementById('count').innerText = users.length;
-
-            // الترتيب: الأحدث في الأعلى (نفس الماستر)
-            users.reverse().forEach(u => {
-                const expiry = u.expiryDate ? new Date(u.expiryDate) : null;
-                const now = new Date();
-                let days = expiry ? Math.ceil((expiry - now) / (1000*60*60*24)) : 0;
-                let isActive = u.active && days > 0;
-
-                list.innerHTML += `
-                    <div class="user-row ${isActive ? 'active-user' : 'expired-user'}" data-name="${(u.name || '').toLowerCase()}">
-                        <div style="flex:1;">
-                            <b style="font-size:17px;">${u.name}</b> 
-                            <span class="badge ${isActive ? 'badge-green' : 'badge-red'}">${isActive ? days + ' يوم متبقي' : 'منتهي !!!'}</span><br>
-                            <small style="color:#aaa;">تاريخ الانتهاء: ${expiry ? expiry.toLocaleDateString('en-GB') : 'غير محدد'}</small><br>
-                            <small style="color:var(--gold);">الهاتف: ${u.phone || '---'}</small>
-                        </div>
-                        <div style="min-width:110px; display:flex; flex-direction:column; gap:3px;">
-                            <button class="btn btn-month" onclick="setSub('${u.id}', 30)">تفعيل شهر</button>
-                            <button class="btn btn-test" onclick="setSub('${u.id}', 3)">تجربة 3 أيام</button>
-                            <a href="https://wa.me/${(u.phone || '').replace(/\D/g,'')}" target="_blank" class="btn btn-wa"><i class="fab fa-whatsapp"></i> واتساب</a>
-                        </div>
-                    </div>`;
-            });
-        });
-
-        window.setSub = (id, d) => {
-            const exp = new Date(); exp.setDate(exp.getDate() + d);
-            update(ref(db, `users/${id}`), { active: true, expiryDate: exp.toISOString() })
-            .then(() => alert("تم التحديث بنجاح ✅"));
-        };
-
-        window.logout = () => { sessionStorage.clear(); location.href = 'admin.html'; };
-        
-        window.filter = () => {
-            const v = document.getElementById('mSearch').value.toLowerCase();
-            document.querySelectorAll('.user-row').forEach(r => r.style.display = r.getAttribute('data-name').includes(v) ? "flex" : "none");
-        };
-    </script>
-</body>
-</html>
+        // تم استبدال مفاتيح الربط للاتصال بالمختبر الجديد
+        const firebaseConfig = {
+          apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
+          authDomain: "sofygram-mobile-app.firebaseapp
