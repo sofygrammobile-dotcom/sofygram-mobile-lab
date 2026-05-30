@@ -36,7 +36,7 @@
 <body>
 
     <div id="authBox" class="master-card">
-        <img src="logo.png" style="width:120px; margin-bottom:15px;">
+        <img src="logo.png" style="width:120px; margin-bottom:15px;" onerror="this.src='https://sofygram.com/logo.png'">
         <h2 id="t-lock">قفل الإدارة الملكية V3 👑</h2>
         <input type="password" id="mPass" placeholder="كلمة المرور">
         <button onclick="masterLogin()" class="btn-king">دخول السيطرة 👑</button>
@@ -67,9 +67,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
         import { getDatabase, ref, onValue, get, update, remove, set, push } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
+        // تم استبدال مفاتيح الربط للاتصال بالمختبر الجديد
         const firebaseConfig = {
-            apiKey: "AIzaSyBqlRUshD3182zmliJrDUzBXQjL_eXSKtY",
-            databaseURL: "https://sofygramclinic-default-rtdb.firebaseio.com"
+          apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
+          authDomain: "sofygram-mobile-app.firebaseapp.com",
+          databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+          projectId: "sofygram-mobile-app",
+          storageBucket: "sofygram-mobile-app.firebasestorage.app",
+          messagingSenderId: "190753733711",
+          appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
