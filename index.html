@@ -191,23 +191,10 @@
     window.toggleLanguage = (e) => {
         if(e) e.stopPropagation();
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
-        // حفظ اللغة في ذاكرة المتصفح
-        localStorage.setItem('sofygramLang', currentLang);
-        
         const html = document.getElementById('htmlTag');
         const btn = document.querySelector('.lang-btn');
-        // ... (باقي الكود كما هو)
-        if(currentLang === 'en') {
-            html.setAttribute('dir', 'ltr');
-            html.setAttribute('lang', 'en');
-            document.body.classList.add('en-mode');
-            btn.innerText = "العربية";
-        } else {
-            html.setAttribute('dir', 'rtl');
-            html.setAttribute('lang', 'ar');
-            document.body.classList.remove('en-mode');
-            btn.innerText = "English";
-        }
+        if(currentLang === 'en') { html.setAttribute('dir', 'ltr'); html.setAttribute('lang', 'en'); document.body.classList.add('en-mode'); btn.innerText = "العربية"; } 
+        else { html.setAttribute('dir', 'rtl'); html.setAttribute('lang', 'ar'); document.body.classList.remove('en-mode'); btn.innerText = "English"; }
         applyTranslations();
     };
 
