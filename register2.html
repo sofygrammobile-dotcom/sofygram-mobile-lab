@@ -2,48 +2,67 @@
 <html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
-    <title id="regTitle">تسجيل الحساب</title>
+    <title id="regTitle">تسجيل حساب جديد</title>
     <style>
         body { background: #050a14; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
         .reg-card { background: #121212; padding: 30px; border-radius: 25px; border: 1px solid #ffd700; max-width: 400px; margin: auto; }
-        .lang-btn { background: #222; color: #ffd700; border: 1px solid #ffd700; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; background: #000; color: white; border: 1px solid #333; box-sizing: border-box; }
+        .lang-btn { background: #222; color: #ffd700; border: 1px solid #ffd700; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
         .btn-reg { background: #ffd700; color: black; padding: 15px; border-radius: 10px; width: 100%; border: none; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <button class="lang-btn" onclick="toggleLang()">English / العربية</button>
+
+    <div style="text-align: left;">
+        <button class="lang-btn" onclick="toggleLang()">English / العربية</button>
+    </div>
+
     <div class="reg-card">
-        <h2 id="rTitle">تسجيل حساب جديد</h2>
+        <h2 id="title">تسجيل حساب جديد</h2>
         <input type="text" id="name" placeholder="الاسم الكامل">
+        <input type="text" id="phone" placeholder="رقم الهاتف">
         <input type="text" id="user" placeholder="اسم المستخدم">
+        <input type="password" id="pass" placeholder="كلمة المرور">
         <button class="btn-reg" id="regBtn" onclick="register()">تسجيل ومتابعة للدفع</button>
     </div>
 
     <script>
-        const plan = new URLSearchParams(window.location.search).get('plan');
+        const langData = {
+            ar: { title: "تسجيل حساب جديد", name: "الاسم الكامل", phone: "رقم الهاتف", user: "اسم المستخدم", pass: "كلمة المرور", btn: "تسجيل ومتابعة للدفع" },
+            en: { title: "Register New Account", name: "Full Name", phone: "Phone Number", user: "Username", pass: "Password", btn: "Register & Continue" }
+        };
+
+        function applyLang(lang) {
+            const html = document.getElementById('htmlTag');
+            html.dir = lang === 'en' ? 'ltr' : 'rtl';
+            html.lang = lang;
+            document.getElementById('title').innerText = langData[lang].title;
+            document.getElementById('name').placeholder = langData[lang].name;
+            document.getElementById('phone').placeholder = langData[lang].phone;
+            document.getElementById('user').placeholder = langData[lang].user;
+            document.getElementById('pass').placeholder = langData[lang].pass;
+            document.getElementById('regBtn').innerText = langData[lang].btn;
+        }
+
         function toggleLang() {
             let lang = localStorage.getItem('sofygramLang') === 'en' ? 'ar' : 'en';
             localStorage.setItem('sofygramLang', lang);
-            location.reload(); // تحديث الصفحة لتطبيق اللغة
+            applyLang(lang);
         }
-        function register() {
-            const user = document.getElementById('user').value;
-            const name = document.getElementById('name').value;
-            if(!user || !name) return alert("يرجى ملء البيانات");
-            const target = (plan === 'gold') ? 'pay20.html' : 'pay.html';
-            window.location.href = `${target}?user=${user}&name=${encodeURIComponent(name)}`;
-        }
+
+        // السحر هنا: هذا السطر يقرأ اللغة من الذاكرة فور فتح الصفحة
         window.onload = () => {
-            const lang = localStorage.getItem('sofygramLang') || 'ar';
-            if(lang === 'en') {
-                document.getElementById('htmlTag').dir = 'ltr';
-                document.getElementById('rTitle').innerText = "Register New Account";
-                document.getElementById('name').placeholder = "Full Name";
-                document.getElementById('user').placeholder = "Username";
-                document.getElementById('regBtn').innerText = "Register & Continue";
-            }
+            const savedLang = localStorage.getItem('sofygramLang') || 'ar';
+            applyLang(savedLang);
         };
+
+        function register() {
+            // ... (منطق التسجيل) ...
+            const urlParams = new URLSearchParams(window.location.search);
+            const plan = urlParams.get('plan');
+            const targetPage = (plan === 'gold') ? 'pay20.html' : 'pay.html';
+            window.location.href = `${targetPage}?user=${document.getElementById('user').value}&name=${encodeURIComponent(document.getElementById('name').value)}`;
+        }
     </script>
 </body>
 </html>
