@@ -11,6 +11,14 @@
         .admin-card { max-width: 450px; margin: auto; background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid #333; }
         h2 { color: var(--fire); text-align: center; margin-bottom: 25px; }
         
+        /* زر الرجوع الجديد */
+        .btn-back { 
+            background: #222; color: #fff; padding: 10px 20px; border-radius: 12px; 
+            text-decoration: none; display: inline-block; margin-bottom: 20px; 
+            font-size: 14px; border: 1px solid #444; transition: 0.3s;
+        }
+        .btn-back:hover { background: #333; border-color: var(--fire); }
+
         .time-control { background: #1a1a2e; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; }
         .control-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
         
@@ -24,15 +32,13 @@
         .btn-main { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
         .btn-loc { background: #3498db; color: white; }
         .btn-save { background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; margin-top: 30px; }
-        
-        /* زر الرجوع الجديد */
-        .btn-back { background: #333; color: white; padding: 8px 20px; border-radius: 10px; text-decoration: none; display: inline-block; margin-bottom: 15px; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="admin-card">
-    <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+    <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للبحث</a>
+    
     <h2>لوحة تحكم السكرتير ⚙️</h2>
 
     <div class="time-control">
