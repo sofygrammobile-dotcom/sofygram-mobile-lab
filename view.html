@@ -11,6 +11,7 @@
         
         .logo-top img { width: 150px; margin-top: 15px; filter: drop-shadow(0 0 10px var(--gold)); }
 
+        /* شريط البطاقات السفلي المتعدد */
         #multiSessionContainer { position: fixed; bottom: 15px; left: 0; width: 100%; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 10px 20px; gap: 15px; z-index: 3000; justify-content: flex-start; scrollbar-width: none; }
         #multiSessionContainer::-webkit-scrollbar { display: none; }
         .mini-card { min-width: 140px; background: rgba(18, 18, 18, 0.95); border: 2px solid var(--gold); border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: pointer; text-align: center; }
@@ -18,6 +19,7 @@
         .mc-num { font-size: 35px; font-weight: bold; margin: 5px 0; color: var(--gold); }
         .mc-close { position: absolute; top: -10px; right: -10px; background: #fff; color: #000; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; display: flex; align-items: center; justify-content: center; z-index: 10; }
 
+        /* واجهة العرض الأساسية */
         .number-box { background: #121212; border: 3px solid var(--gold); border-radius: 45px; padding: 35px; max-width: 320px; margin: 20px auto; box-shadow: 0 0 30px var(--gold); }
         .big-num { font-size: 110px; font-weight: bold; margin: 5px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .clinic-title { color: var(--gold); font-size: 28px; margin-bottom: 5px; }
@@ -63,7 +65,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
         import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
-        // مفاتيح الفايربيس للمختبر الجديد
+        // مفاتيح المختبر الجديد
         const firebaseConfig = {
           apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
           authDomain: "sofygram-mobile-app.firebaseapp.com",
@@ -85,18 +87,20 @@
             startTracking(id); 
             addToSessions(id); 
         } else {
-            document.getElementById('clinicName').innerText = "الرابط غير صحيح أو مفقود ❌";
-            document.getElementById('statusTag').style.display = "none";
+            document.getElementById('clinicName').innerText = "الرابط غير صحيح ❌";
+            document.getElementById('statusTag').style.display = 'none';
         }
-        
         window.addEventListener('load', renderMultiCards);
 
+        // وظيفة نداء مترو دبي (بنت وولد)
         function triggerMetroAlarm() {
             const synth = window.speechSynthesis;
+            // نداء الولد (عربي)
             const msgAr = new SpeechSynthesisUtterance("أهلاً بكم في منصة صوفي غرام العالمية. حان موعدكم الآن، يرجى التوجه حالاً. شكراً لكم.");
             msgAr.lang = 'ar-SA';
             msgAr.rate = 0.9;
             
+            // نداء البنت (إنكليزي)
             const msgEn = new SpeechSynthesisUtterance("Welcome to Sofygram Global. It is your turn now, please proceed immediately. Thank you.");
             msgEn.lang = 'en-US';
             msgEn.rate = 1.0;
@@ -112,18 +116,21 @@
                 const info = snap.val(); 
                 if(!info) {
                     document.getElementById('clinicName').innerText = "الحساب غير موجود ❌";
+                    document.getElementById('statusTag').style.display = 'none';
                     return;
                 }
                 const current = info.currentNum || 0;
                 
                 document.getElementById('liveNumber').innerText = current;
-                document.getElementById('clinicName').innerText = info.name || "عيادة مسجلة";
+                document.getElementById('clinicName').innerText = info.name;
                 document.getElementById('statusTag').innerText = info.status || "متصل";
+                document.getElementById('statusTag').style.display = 'inline-block';
                 
                 const noteBox = document.getElementById('liveNote');
                 if(info.note) { noteBox.innerText = info.note; noteBox.style.display = "block"; } 
                 else { noteBox.style.display = "none"; }
 
+                // فحص المنبه
                 const target = document.getElementById('userTarget').value;
                 if(isAlarmReady && target == current && current != 0) {
                     triggerMetroAlarm();
@@ -152,7 +159,7 @@
                     card.onclick = () => location.href = 'view.html?id=' + sid;
                     card.innerHTML = `
                         <div class="mc-close" onclick="removeSession(event,'${sid}')">×</div>
-                        <p class="mc-name">${u.name || 'عيادة'}</p>
+                        <p class="mc-name">${u.name}</p>
                         <div class="mc-num" id="n-${sid}">${u.currentNum || 0}</div>
                     `;
                     container.appendChild(card);
@@ -174,6 +181,7 @@
             if(!document.getElementById('userTarget').value) return alert("يرجى إدخال رقمك أولاً 🔔");
             isAlarmReady = !isAlarmReady;
             document.getElementById('bellIcon').classList.toggle('bell-active');
+            // تفعيل محرك الصوت (لازم تفاعل من المستخدم أول مرة)
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
         };
     </script>
