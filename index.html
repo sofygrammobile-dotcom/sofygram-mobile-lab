@@ -158,8 +158,20 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
-    const firebaseConfig = { apiKey: "AIzaSyBqlRUshD3182zmliJrDUzBXQjL_eXSKtY", authDomain: "sofygramclinic.firebaseapp.com", databaseURL: "https://sofygramclinic-default-rtdb.firebaseio.com", projectId: "sofygramclinic", appId: "1:207475452149:web:3f0fbbcc1419bf9e6b7dbc" };
-    const app = initializeApp(firebaseConfig); const db = getDatabase(app);
+    
+    // تم تغيير مفاتيح الربط للفايربيس الجديد الخاص بالمختبر
+    const firebaseConfig = {
+      apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
+      authDomain: "sofygram-mobile-app.firebaseapp.com",
+      databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+      projectId: "sofygram-mobile-app",
+      storageBucket: "sofygram-mobile-app.firebasestorage.app",
+      messagingSenderId: "190753733711",
+      appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
+    };
+    
+    const app = initializeApp(firebaseConfig); 
+    const db = getDatabase(app);
 
     const locations = {
         "العراق": ["النجف", "كربلاء", "بغداد", "البصرة", "بابل", "الأنبار", "أربيل", "السليمانية", "دهوك", "ديالى", "ذي قار", "صلاح الدين", "كركوك", "ميسان", "المثنى", "نينوى", "القادسية", "واسط"],
