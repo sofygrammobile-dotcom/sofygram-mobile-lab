@@ -18,6 +18,8 @@
         .btn-save { background: var(--glow); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; width: 95%; cursor: pointer; margin-top: 10px; }
         .tools-grid { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; }
         #qr-area { background: white; padding: 10px; border-radius: 12px; display: inline-block; }
+        /* زر الرجوع */
+        .btn-back { background: #333; color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none; display: inline-block; margin-bottom: 15px; font-size: 14px; border: 1px solid #444; }
     </style>
 </head>
 <body>
@@ -31,6 +33,7 @@
     </div>
 
     <div id="controlBox" class="admin-card" style="display:none;">
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
         <h2 id="cName" style="color:var(--glow); margin:0;"></h2>
         <div class="num-display" id="n">0</div>
         <div style="display:flex; justify-content:center;">
@@ -59,7 +62,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
         import { getDatabase, ref, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
-        // مفاتيح المختبر
         const firebaseConfig = {
           apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
           authDomain: "sofygram-mobile-app.firebaseapp.com",
@@ -75,39 +77,31 @@
         let curUser = ""; let curNum = 0;
 
         window.login = async () => {
-            // تم حذف .toLowerCase() لضمان قبول جميع أنواع الحسابات
             const user = document.getElementById('u').value.trim();
             const pass = document.getElementById('p').value.trim();
-
             if(!user || !pass) return alert("يرجى إدخال البيانات");
 
-            // 1. فحص المعاونين/المدراء (Staff)
             const staffSnap = await get(ref(db, 'staff'));
             const staffData = staffSnap.val();
             if(staffData) {
                 for(let id in staffData) {
                     if(staffData[id].name === user && staffData[id].password === pass) {
                         sessionStorage.setItem('staff_auth', 'true');
-                        sessionStorage.setItem('staff_name', user);
-                        alert("أهلاً بك يا فريق الإدارة ✅");
                         location.href = 'staff_work.html';
                         return;
                     }
                 }
             }
 
-            // 2. فحص الأطباء والمشتركين (Users)
             get(child(ref(db), `users/${user}`)).then((s) => {
                 if(s.exists()) {
                     const userData = s.val();
                     if(userData.password == pass) {
-                        // تعديل شرط التفعيل ليكون أكثر مرونة
                         if(userData.active === true || userData.active === "true") {
                             curUser = user;
                             document.getElementById('loginBox').style.display = 'none';
                             document.getElementById('controlBox').style.display = 'block';
                             
-                            // توليد الباركود بالرابط الخاص بالمختبر
                             document.getElementById("qr-area").innerHTML = ""; 
                             new QRCode(document.getElementById("qr-area"), {
                                 text: `https://sofygrammobile-dotcom.github.io/sofygram-mobile-lab/view.html?id=${curUser}`,
@@ -125,17 +119,14 @@
                                 }
                             });
                         } else {
-                            alert("⚠️ الحساب موجود ولكنه غير مفعل. يرجى تفعيله من لوحة الماستر.");
+                            alert("⚠️ الحساب غير مفعل.");
                         }
                     } else {
                         alert("رمز المرور خاطئ ❌");
                     }
                 } else {
-                    alert("اسم المستخدم غير موجود ❌ (تأكد من الحروف الكبيرة والصغيرة)");
+                    alert("اسم المستخدم غير موجود ❌");
                 }
-            }).catch(e => {
-                console.error(e);
-                alert("فشل الاتصال بالخادم");
             });
         };
 
