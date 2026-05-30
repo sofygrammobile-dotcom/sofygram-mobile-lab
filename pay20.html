@@ -1,221 +1,90 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sofygram Gold | اشتراك الطبيب الذهبي ⚕️</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --glow: #ffd700; --stripe-color: #635bff; --paypal-color: #0070ba; }
+        :root { --glow: #ffd700; }
         body { background: #050a14; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        
-        /* زر تبديل اللغة أعلى الشاشة */
-        .lang-switcher { display: flex; justify-content: flex-end; max-width: 450px; margin: 0 auto 10px auto; }
-        .lang-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glow); color: var(--glow); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-
-        .pay-card { background: #121212; padding: 30px; border-radius: 35px; max-width: 450px; margin: 10px auto; border: 1px solid var(--glow); box-shadow: 0 0 25px rgba(255, 215, 0, 0.1); }
+        .pay-card { background: #121212; padding: 30px; border-radius: 35px; max-width: 450px; margin: 20px auto; border: 1px solid var(--glow); box-shadow: 0 0 25px rgba(255, 215, 0, 0.1); }
         .method { background: #000; padding: 20px; border-radius: 20px; margin: 15px 0; border: 1px solid #222; cursor: pointer; transition: 0.3s; position: relative; }
         .method:hover { border-color: var(--glow); transform: scale(1.01); }
         
-        body.en-mode .method { text-align: left; }
-        body.ar-mode .method { text-align: center; }
-
-        .copy-box { background: #1a1a1a; padding: 12px; border-radius: 15px; margin-top: 10px; border: 1px dashed #444; transition: 0.3s; cursor: pointer; }
+        /* تنسيق خانات النسخ الفرعية */
+        .copy-box { background: #1a1a1a; padding: 12px; border-radius: 15px; margin-top: 10px; border: 1px dashed #444; transition: 0.3s; }
         .copy-box:hover { background: #222; border-color: var(--glow); }
 
-        .num { font-family: monospace; font-size: 19px; color: var(--glow); display: block; word-break: break-all; margin-top: 5px; }
-        .btn-wa { background: #25d366; color: white; padding: 18px; width: 100%; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71; padding: 10px 20px; border-radius: 10px; display: none; z-index: 100; color: white; font-weight: bold; }
+        .num { font-family: monospace; font-size: 19px; color: var(--glow); display: block; word-break: break-all; }
+        .btn-wa { background: #25d366; color: white; padding: 18px; width: 100%; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71; padding: 10px 20px; border-radius: 10px; display: none; z-index: 100; }
         .badge { background: #e74c3c; color: white; font-size: 10px; padding: 3px 8px; border-radius: 5px; position: absolute; top: 10px; left: 10px; }
-        body.en-mode .badge { left: auto; right: 10px; }
-
-        /* أزرار البوابات العالمية */
-        .btn-global { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; border: none; border-radius: 15px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 12px; color: white; transition: 0.3s; }
-        .btn-global-stripe { background: var(--stripe-color); }
-        .btn-global-stripe:hover { box-shadow: 0 0 15px rgba(99, 91, 255, 0.4); }
-        .btn-global-paypal { background: var(--paypal-color); }
-        .btn-global-paypal:hover { box-shadow: 0 0 15px rgba(0, 112, 186, 0.4); }
     </style>
 </head>
-<body class="ar-mode">
-
-    <div class="lang-switcher">
-        <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
-    </div>
+<body>
 
     <div class="pay-card">
-        <h2 style="color:var(--glow);" id="mainTitle">تفعيل الاشتراك الذهبي 👑</h2>
+        <h2 style="color:var(--glow);">تفعيل الاشتراك الذهبي 👑</h2>
         <p id="welcomeMsg" style="font-weight: bold;"></p>
-        <p id="priceDesc" style="font-size: 14px; color: #888;">سعر الاشتراك: 20,000 د.ع (داخل العراق) <br> أو 20$ دولار (خارج العراق)</p>
+        <p style="font-size: 14px; color: #888;">سعر الاشتراك: 20,000 د.ع (داخل العراق) <br> أو 20$ دولار (خارج العراق)</p>
 
         <div class="method" onclick="copy('07807466488')">
-            <span class="badge" id="badgeLocal">داخل العراق 🇮🇶</span>
-            <span id="txtZain">زين كاش (Zain Cash)</span>
+            <span class="badge">داخل العراق 🇮🇶</span>
+            <span>زين كاش (Zain Cash)</span>
             <span class="num">07807466488</span>
-            <small style="color:#555;" id="txtClickCopy1">اضغط للنسخ</small>
+            <small style="color:#555;">اضغط للنسخ</small>
         </div>
 
         <div class="method" style="cursor: default;">
-            <span class="badge" id="badgeGlobalLocal">دولي + محلي 🌏</span>
-            <span id="txtMaster">ماستر كارد (MasterCard)</span>
+            <span class="badge">دولي + محلي 🌏</span>
+            <span>ماستر كارد (MasterCard)</span>
             
             <div class="copy-box" onclick="copy('5213720965090876')">
-                <small style="color:#888; display:block;" id="txtMasterInt">للتحويل الدولي (16 رقم)</small>
+                <small style="color:#888; display:block; margin-bottom:5px;">للتحويل الدولي (16 رقم)</small>
                 <span class="num">5213720965090876</span>
-                <small style="color:var(--glow); font-size: 10px;" id="txtClickCopy2">اضغط لنسخ الرقم الدولي</small>
+                <small style="color:var(--glow); font-size: 10px;">اضغط لنسخ الرقم الدولي</small>
             </div>
 
             <div class="copy-box" onclick="copy('7918823316')">
-                <small style="color:#888; display:block;" id="txtMasterLocal">للتحويل من داخل العراق (رقم الحساب)</small>
+                <small style="color:#888; display:block; margin-bottom:5px;">للتحويل من داخل العراق (رقم الحساب)</small>
                 <span class="num">7918823316</span>
-                <small style="color:var(--glow); font-size: 10px;" id="txtClickCopy3">اضغط لنسخ رقم الحساب</small>
+                <small style="color:var(--glow); font-size: 10px;">اضغط لنسخ رقم الحساب</small>
             </div>
         </div>
 
         <div class="method" onclick="sendWA('طلب معلومات ويسترن يونيون للذهبي')">
-            <span class="badge" id="badgeGlobal">دولي 🌏</span>
-            <span id="txtWestern">ويسترن يونيون (Western Union)</span>
-            <span class="num" style="font-size: 16px;" id="txtWesternAction">اضغط لطلب بيانات التحويل بالاسم</span>
+            <span class="badge">دولي 🌏</span>
+            <span>ويسترن يونيون (Western Union)</span>
+            <span class="num" style="font-size: 16px;">اضغط لطلب بيانات التحويل بالاسم</span>
         </div>
 
-        <div id="globalGateways" style="border-top: 1px dashed #333; margin-top: 20px; padding-top: 10px;">
-            <button class="btn-global btn-global-stripe" onclick="triggerGlobalPay('Stripe')">
-                <i class="fa-solid fa-credit-card"></i> <span id="txtStripeBtn">الدفع المباشر بالفيزا / ماستركارد</span>
-            </button>
-            <button class="btn-global btn-global-paypal" onclick="triggerGlobalPay('PayPal')">
-                <i class="fa-brands fa-paypal"></i> <span id="txtPaypalBtn">الدفع السريع بواسطة PayPal</span>
-            </button>
-        </div>
-
-        <button onclick="sendWA('تم تحويل الاشتراك الذهبي')" class="btn-wa">
-            <i class="fa-brands fa-whatsapp"></i> <span id="txtWaBtn">تم التحويل، إرسال الوصل للواتساب ✅</span>
-        </button>
+        <button onclick="sendWA('تم تحويل الاشتراك الذهبي')" class="btn-wa">تم التحويل، إرسال الوصل للواتساب ✅</button>
     </div>
 
     <div id="toast" class="toast">تم نسخ الرقم ✅</div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const user = urlParams.get('user') || 'N/A';
+        const user = urlParams.get('user');
         const name = urlParams.get('name');
         
-        // القاموس اللغوي الخاص بصفحة التفعيل الذهبية
-        const translations = {
-            ar: {
-                mainTitle: "تفعيل الاشتراك الذهبي 👑",
-                priceDesc: "سعر الاشتراك: 20,000 د.ع (داخل العراق) <br> أو 20$ دولار (خارج العراق)",
-                badgeLocal: "داخل العراق 🇮🇶",
-                badgeGlobalLocal: "دولي + محلي 🌏",
-                badgeGlobal: "دولي 🌏",
-                txtZain: "زين كاش (Zain Cash)",
-                txtMaster: "ماستر كارد (MasterCard)",
-                txtWestern: "ويسترن يونيون (Western Union)",
-                txtClickCopy1: "اضغط للنسخ",
-                txtClickCopy2: "اضغط لنسخ الرقم الدولي",
-                txtClickCopy3: "اضغط لنسخ رقم الحساب",
-                txtMasterInt: "للتحويل الدولي (16 رقم)",
-                txtMasterLocal: "للتحويل من داخل العراق (رقم الحساب)",
-                txtWesternAction: "اضغط لطلب بيانات التحويل بالاسم",
-                txtStripeBtn: "الدفع المباشر بالفيزا / ماستركارد",
-                txtPaypalBtn: "الدفع السريع بواسطة PayPal",
-                txtWaBtn: "تم التحويل، إرسال الوصل للواتساب ✅",
-                toastCopy: "تم نسخ الرقم ✅",
-                welcome: "مرحباً بك دكتور: ",
-                waMsgPrefix: "مرحباً صوفيگرام، الحالة: ",
-                alertGlobal: "سيتم توجيهك الآن إلى بوابة دفع "
-            },
-            en: {
-                mainTitle: "Activate Gold Subscription 👑",
-                priceDesc: "Subscription Fee: 20,000 IQD (Inside Iraq) <br> or $20 USD (International)",
-                badgeLocal: "Inside Iraq 🇮🇶",
-                badgeGlobalLocal: "Global + Local 🌏",
-                badgeGlobal: "International 🌏",
-                txtZain: "Zain Cash Wallet",
-                txtMaster: "MasterCard Transfer",
-                txtWestern: "Western Union Transfer",
-                txtClickCopy1: "Click to Copy",
-                txtClickCopy2: "Click to copy Card Number",
-                txtClickCopy3: "Click to copy Account Number",
-                txtMasterInt: "For International Transfer (16 Digits)",
-                txtMasterLocal: "For Local Transfer (Account Number)",
-                txtWesternAction: "Click to request transfer details by name",
-                txtStripeBtn: "Pay directly via Visa / MasterCard",
-                txtPaypalBtn: "Express Checkout with PayPal",
-                txtWaBtn: "I have transferred, send receipt via WhatsApp ✅",
-                toastCopy: "Copied to clipboard ✅",
-                welcome: "Welcome Dr. ",
-                waMsgPrefix: "Hello Sofygram, Status: ",
-                alertGlobal: "Redirecting you to "
-            }
-        };
-
-        let currentLang = 'ar';
-
-        function updateUI() {
-            const t = translations[currentLang];
-            const htmlTag = document.getElementById('htmlTag');
-            
-            if(currentLang === 'ar') {
-                htmlTag.setAttribute('dir', 'rtl');
-                htmlTag.setAttribute('lang', 'ar');
-                document.body.className = "ar-mode";
-                document.getElementById('langBtn').innerText = "English";
-            } else {
-                htmlTag.setAttribute('dir', 'ltr');
-                htmlTag.setAttribute('lang', 'en');
-                document.body.className = "en-mode";
-                document.getElementById('langBtn').innerText = "العربية";
-            }
-
-            document.getElementById('mainTitle').innerText = t.mainTitle;
-            document.getElementById('priceDesc').innerHTML = t.priceDesc;
-            document.getElementById('badgeLocal').innerText = t.badgeLocal;
-            document.getElementById('badgeGlobalLocal').innerText = t.badgeGlobalLocal;
-            document.getElementById('badgeGlobal').innerText = t.badgeGlobal;
-            document.getElementById('txtZain').innerText = t.txtZain;
-            document.getElementById('txtMaster').innerText = t.txtMaster;
-            document.getElementById('txtWestern').innerText = t.txtWestern;
-            document.getElementById('txtClickCopy1').innerText = t.txtClickCopy1;
-            document.getElementById('txtClickCopy2').innerText = t.txtClickCopy2;
-            document.getElementById('txtClickCopy3').innerText = t.txtClickCopy3;
-            document.getElementById('txtMasterInt').innerText = t.txtMasterInt;
-            document.getElementById('txtMasterLocal').innerText = t.txtMasterLocal;
-            document.getElementById('txtWesternAction').innerText = t.txtWesternAction;
-            document.getElementById('txtStripeBtn').innerText = t.txtStripeBtn;
-            document.getElementById('txtPaypalBtn').innerText = t.txtPaypalBtn;
-            document.getElementById('txtWaBtn').innerText = t.txtWaBtn;
-            
-            if(name) {
-                document.getElementById('welcomeMsg').innerText = `${t.welcome}${decodeURIComponent(name)}`;
-            }
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            updateUI();
+        if(name) {
+            document.getElementById('welcomeMsg').innerText = `مرحباً بك دكتور: ${decodeURIComponent(name)}`;
         }
 
         function copy(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const t = document.getElementById('toast');
-                t.innerText = translations[currentLang].toastCopy;
                 t.style.display = 'block';
                 setTimeout(() => t.style.display = 'none', 2000);
             });
         }
 
         function sendWA(status) {
-            const t = translations[currentLang];
             const myNumber = "9647823842929"; 
-            const msg = `${t.waMsgPrefix}${status}%0Aالاسم: ${name || 'N/A'}%0Aاليوزر: ${user}`;
+            const msg = `مرحباً صوفيگرام، الحالة: ${status}%0Aالاسم: ${name}%0Aاليوزر: ${user}`;
             window.location.href = `https://wa.me/${myNumber}?text=${msg}`;
         }
-
-        function triggerGlobalPay(gateway) {
-            alert(translations[currentLang].alertGlobal + gateway + "...");
-        }
-
-        window.onload = updateUI;
     </script>
 </body>
 </html>

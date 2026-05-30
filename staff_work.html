@@ -56,15 +56,7 @@
             document.getElementById('staffInfo').innerText = "المعاون: " + sessionStorage.getItem('staff_name');
         }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RZrQGALFBU",
-            authDomain: "sofygram-mobile-app.firebaseapp.com",
-            databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
-            projectId: "sofygram-mobile-app",
-            storageBucket: "sofygram-mobile-app.firebasestorage.app",
-            messagingSenderId: "190753733711",
-            appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyBqlRUshD3182zmliJrDUzBXQjL_eXSKtY", databaseURL: "https://sofygramclinic-default-rtdb.firebaseio.com" };
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
         onValue(ref(db, 'users'), (snap) => {
