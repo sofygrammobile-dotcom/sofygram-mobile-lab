@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofygram | التسجيل العالمي 🌐</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --gold: #ffd700; --bg: #050a14; --card: #121c2c; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 10px; }
+        
+        .reg-card { 
+            background: var(--card); padding: 30px; border-radius: 35px; 
+            max-width: 550px; margin: 20px auto; border: 1px solid var(--gold); 
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.15); 
+        }
+        h2 { color: var(--gold); margin-bottom: 25px; }
+        
+        label { display: block; text-align: right; margin: 10px 25px 5px 0; font-size: 14px; color: #aaa; }
+        input, select { 
+            padding: 15px; border-radius: 18px; border: 1px solid #333; background: #000; 
+            color: #fff; text-align: center; margin-bottom: 15px; width: 95%; 
+            font-size: 16px; outline: none; transition: 0.3s; box-sizing: border-box; 
+        }
+        input:focus, select:focus { border-color: var(--gold); }
+        
+        .btn-reg { 
+            background: linear-gradient(45deg, var(--gold), #ff8c00); color: black; 
+            padding: 18px; width: 95%; border: none; border-radius: 20px; 
+            font-weight: bold; cursor: pointer; font-size: 19px; margin-top: 20px; 
+        }
+        
+        .btn-back { 
+            display: inline-block; margin-top: 20px; color: #888; text-decoration: none; 
+            font-size: 14px; transition: 0.3s; 
+        }
+        .btn-back:hover { color: var(--gold); }
+        
+        .hidden { display: none !important; }
+        optgroup { color: var(--gold); background: #1a1a1a; }
+    </style>
+</head>
+<body>
+
+    <div class="reg-card">
+        <h2>انضم إلى صوفيگرام 🌐</h2>
+        <p id="planDisplay" style="color:var(--gold); font-weight:bold; margin-bottom:20px;"></p>
+        
+        <label>اسم النشاط التجاري:</label>
+        <input type="text" id="name" placeholder="مثلاً: دكتور علي / مطعم الصقر">
+        
+        <label>فئة النشاط:</label>
+        <select id="type">
+            <option value="">-- اختر الفئة --</option>
+            <optgroup label="طبي">
+                <option>أطباء وعيادات</option><option>صيدليات</option><option>مختبرات</option><option>مراكز تجميل</option>
+            </optgroup>
+            <optgroup label="تجاري">
+                <option>مطاعم وكافيهات</option><option>أسواق ومولات</option><option>صاغة ومجوهرات</option><option>حلاقة وتجميل</option>
+            </optgroup>
+            <optgroup label="خدمي">
+                <option>محاماة</option><option>مكاتب تكسي</option><option>صيانة موبايل</option><option>كهربائي</option>
+            </optgroup>
+            <option>غير ذلك</option>
+        </select>
+
+        <label>الدولة:</label>
+        <select id="country" onchange="loadCities()">
+            <option value="">اختر الدولة</option>
+            <option value="العراق">العراق 🇮🇶</option>
+            <option value="السعودية">السعودية 🇸🇦</option>
+            <option value="الإمارات">الإمارات 🇦🇪</option>
+            <option value="الكويت">الكويت 🇰🇼</option>
+            <option value="قطر">قطر 🇶🇦</option>
+            <option value="مصر">مصر 🇪🇬</option>
+            <option value="تركيا">تركيا 🇹🇷</option>
+            <option value="أمريكا">أمريكا 🇺🇸</option>
+            <option value="غير ذلك">غير ذلك</option>
+        </select>
+
+        <label>المحافظة / المدينة:</label>
+        <select id="citySelect"></select>
+        <input type="text" id="cityInput" class="hidden" placeholder="اكتب اسم المدينة">
+
+        <label>الحي / المنطقة:</label>
+        <input type="text" id="neighborhood" placeholder="مثلاً: حي الأمير / شارع الإسكان">
+
+        <label>رقم الواتساب:</label>
+        <input type="tel" id="phone" placeholder="07XXXXXXXXX">
+
+        <label>اليوزر والباسوورد:</label>
+        <input type="text" id="username" placeholder="اسم المستخدم (إنجليزي)">
+        <input type="password" id="pass" placeholder="كلمة المرور">
+
+        <button onclick="register()" class="btn-reg">تأكيد التسجيل والانطلاق 🚀</button>
+        <br>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية</a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
+          authDomain: "sofygram-mobile-app.firebaseapp.com",
+          databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+          projectId: "sofygram-mobile-app",
+          storageBucket: "sofygram-mobile-app.firebasestorage.app",
+          messagingSenderId: "190753733711",
+          appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
+        };
+        const app = initializeApp(firebaseConfig); 
+        const db = getDatabase(app);
+
+        const locations = {
+            "العراق": ["النجف", "كربلاء", "بغداد", "البصرة", "بابل", "الأنبار", "أربيل", "السليمانية", "دهوك", "ديالى", "ذي قار", "صلاح الدين", "كركوك", "ميسان", "المثنى", "نينوى", "القادسية", "واسط"],
+            "السعودية": ["الرياض", "جدة", "مكة", "المدينة"],
+            "الإمارات": ["دبي", "أبوظبي", "الشارقة"],
+            "الكويت": ["العاصمة", "حولي", "الفروانية"],
+            "أمريكا": ["نيويورك", "ميشيغان", "كاليفورنيا"],
+            "تركيا": ["إسطنبول", "أنقرة", "أنطاليا"]
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get('type');
+        if(plan === 'gold') document.getElementById('planDisplay').innerText = "⭐ أنت الآن تسجل في الاشتراك الذهبي (الأطباء)";
+        else if(plan === 'silver') document.getElementById('planDisplay').innerText = "💎 أنت الآن تسجل في الاشتراك الفضي (الأنشطة العامة)";
+
+        window.loadCities = () => {
+            const country = document.getElementById('country').value;
+            const ciSe = document.getElementById('citySelect');
+            const ciIn = document.getElementById('cityInput');
+            
+            ciSe.innerHTML = '<option value="">اختر المحافظة/المدينة</option>';
+            if(locations[country]) {
+                ciSe.classList.remove('hidden'); ciIn.classList.add('hidden');
+                locations[country].forEach(c => ciSe.innerHTML += `<option value="${c}">${c}</option>`);
+            } else {
+                ciSe.classList.add('hidden'); ciIn.classList.remove('hidden');
+            }
+        };
+
+        window.register = () => {
+            const name = document.getElementById('name').value;
+            const type = document.getElementById('type').value;
+            const phone = document.getElementById('phone').value;
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('pass').value;
+            const country = document.getElementById('country').value;
+            const city = locations[country] ? document.getElementById('citySelect').value : document.getElementById('cityInput').value;
+
+            if(!name || !type || !user || !pass || !phone || !city) return alert("يرجى إكمال كافة البيانات!");
+
+            set(ref(db, 'users/' + user), {
+                name, type, phone, country, city,
+                neighborhood: document.getElementById('neighborhood').value,
+                password: pass, active: false, regDate: new Date().toISOString(),
+                currentNum: 0, status: "مفتوح الآن"
+            }).then(() => {
+                if (plan === 'gold') window.location.href = `pay20.html?user=${user}&name=${encodeURIComponent(name)}`;
+else window.location.href = `pay.html?user=${user}&name=${encodeURIComponent(name)}`;
+            });
+        };
+    </script>
+</body>
+</html>

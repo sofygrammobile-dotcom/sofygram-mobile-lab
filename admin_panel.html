@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة السكرتير | صوفيگرام ⚙️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --fire: #ff4500; --bg: #050a14; --card: #121212; --glow: #00d2ff; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: right; }
+        .admin-card { max-width: 450px; margin: auto; background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid #333; }
+        h2 { color: var(--fire); text-align: center; margin-bottom: 25px; }
+        
+        /* زر الرجوع للرئيسية */
+        .btn-back { 
+            background: #222; color: #fff; padding: 12px 20px; border-radius: 12px; 
+            text-decoration: none; display: block; margin-bottom: 25px; 
+            font-size: 16px; border: 1px solid #444; transition: 0.3s; 
+            text-align: center; font-weight: bold;
+        }
+        .btn-back:hover { background: #333; border-color: var(--fire); }
+
+        .time-control { background: #1a1a2e; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; }
+        .control-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+        
+        .counter-btn { width: 40px; height: 40px; border-radius: 10px; border: none; background: #333; color: white; font-size: 20px; cursor: pointer; transition: 0.2s; }
+        .counter-btn:active { transform: scale(0.9); background: var(--fire); }
+        .time-display { font-size: 24px; font-weight: bold; color: var(--glow); min-width: 60px; text-align: center; }
+        
+        .toggle-btn { padding: 8px 15px; border-radius: 8px; border: 1px solid #444; background: #000; color: white; cursor: pointer; }
+        .toggle-btn.active { background: var(--fire); border-color: var(--fire); }
+
+        .btn-main { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
+        .btn-loc { background: #3498db; color: white; }
+        .btn-save { background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-card">
+    <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+    
+    <h2>لوحة تحكم السكرتير ⚙️</h2>
+
+    <div class="time-control">
+        <label><i class="fas fa-door-open"></i> وقت الفتح:</label>
+        <div class="control-row">
+            <button class="counter-btn" onclick="changeTime('open', -1)">-</button>
+            <span class="time-display" id="openDisp">4</span>
+            <button class="counter-btn" onclick="changeTime('open', 1)">+</button>
+            <button class="toggle-btn active" id="openAMPM" onclick="toggleAMPM('open')">مساءً</button>
+        </div>
+    </div>
+
+    <div class="time-control">
+        <label><i class="fas fa-door-closed"></i> وقت الإغلاق:</label>
+        <div class="control-row">
+            <button class="counter-btn" onclick="changeTime('close', -1)">-</button>
+            <span class="time-display" id="closeDisp">10</span>
+            <button class="counter-btn" onclick="changeTime('close', 1)">+</button>
+            <button class="toggle-btn active" id="closeAMPM" onclick="toggleAMPM('close')">مساءً</button>
+        </div>
+    </div>
+
+    <button class="btn-main btn-loc" onclick="updateLocation()">
+        <i class="fas fa-crosshairs"></i> تحديث موقع العيادة الآن 📍
+    </button>
+    <p id="locStatus" style="font-size: 12px; color: #2ecc71; text-align: center; margin-top: 5px;"></p>
+
+    <button class="btn-main btn-save" onclick="sendToFirebase()">حفظ التعديلات للجمهور 🚀</button>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
+      databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+      projectId: "sofygram-mobile-app",
+      storageBucket: "sofygram-mobile-app.firebasestorage.app",
+      messagingSenderId: "190753733711",
+      appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const userId = new URLSearchParams(window.location.search).get('id');
+    let times = { open: 4, close: 10 };
+    let ampm = { open: "مساءً", close: "مساءً" };
+    let coords = { lat: "", lng: "" };
+
+    window.changeTime = (type, val) => {
+        times[type] += val;
+        if (times[type] > 12) times[type] = 1;
+        if (times[type] < 1) times[type] = 12;
+        document.getElementById(type + 'Disp').innerText = times[type];
+    };
+
+    window.toggleAMPM = (type) => {
+        ampm[type] = (ampm[type] === "مساءً") ? "صباحاً" : "مساءً";
+        document.getElementById(type + 'AMPM').innerText = ampm[type];
+    };
+
+    window.updateLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                coords.lat = pos.coords.latitude;
+                coords.lng = pos.coords.longitude;
+                document.getElementById('locStatus').innerText = "✅ تم تحديد الموقع بدقة!";
+            });
+        }
+    };
+
+    window.sendToFirebase = () => {
+        if(!userId) return alert("خطأ في معرف الدكتور!");
+        update(ref(db, 'users/' + userId), {
+            openTime: `${times.open} ${ampm.open}`,
+            closeTime: `${times.close} ${ampm.close}`,
+            lat: coords.lat,
+            lng: coords.lng
+        }).then(() => alert("تم تحديث وقت العمل والموقع بنجاح!"));
+    };
+</script>
+</body>
+</html>

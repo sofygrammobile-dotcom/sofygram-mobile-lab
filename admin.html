@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofygram Admin | دخول السيطرة 🔐</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --glow: #ffd700; }
+        body { background: #050a14; color: white; font-family: sans-serif; text-align: center; padding: 15px; margin: 0; }
+        .admin-card { background: #121212; padding: 25px; border-radius: 30px; max-width: 450px; margin: auto; border: 1px solid var(--glow); box-shadow: 0 0 25px rgba(255, 215, 0, 0.1); }
+        .num-display { font-size: 110px; font-weight: bold; color: #fff; margin: 10px 0; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .btn-round { width: 85px; height: 85px; border-radius: 50%; border: none; font-size: 45px; cursor: pointer; color: white; margin: 10px; transition: 0.3s; }
+        .plus { background: #2ecc71; box-shadow: 0 0 15px #2ecc71; }
+        .minus { background: #e74c3c; box-shadow: 0 0 15px #e74c3c; }
+        input, textarea, select { width: 90%; padding: 12px; margin: 8px 0; border-radius: 12px; background: #1e293b; color: white; border: 1px solid #333; text-align: center; }
+        .btn-save { background: var(--glow); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; width: 95%; cursor: pointer; margin-top: 10px; }
+        .tools-grid { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; }
+        #qr-area { background: white; padding: 10px; border-radius: 12px; display: inline-block; }
+        /* زر الرجوع */
+        .btn-back { background: #333; color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none; display: inline-block; margin-bottom: 15px; font-size: 14px; border: 1px solid #444; }
+    </style>
+</head>
+<body>
+
+    <div id="loginBox" class="admin-card">
+        <img src="logo.png" style="width:140px; margin-bottom:20px;" onerror="this.src='https://sofygram.com/logo.png'">
+        <h2 style="color:var(--glow);">دخول الإدارة والسكرتارية 🔐</h2>
+        <input type="text" id="u" placeholder="اسم المستخدم (مثل: hf2026)">
+        <input type="password" id="p" placeholder="كلمة المرور">
+        <button onclick="login()" class="btn-save">دخول</button>
+    </div>
+
+    <div id="controlBox" class="admin-card" style="display:none;">
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+        <h2 id="cName" style="color:var(--glow); margin:0;"></h2>
+        <div class="num-display" id="n">0</div>
+        <div style="display:flex; justify-content:center;">
+            <button class="btn-round minus" onclick="ch(-1)">-</button>
+            <button class="btn-round plus" onclick="ch(1)">+</button>
+        </div>
+        <select id="st">
+            <option value="🟢 مفتوح الآن | Open">🟢 مفتوح الآن</option>
+            <option value="🟡 قريباً | Soon">🟡 قريباً</option>
+            <option value="🔴 مغلق | Closed">🔴 مغلق</option>
+        </select>
+        <textarea id="nt" placeholder="اكتب ملاحظة للمراجعين..."></textarea>
+        <button onclick="upDetails()" class="btn-save">تحديث البيانات 🚀</button>
+        <div class="tools-grid">
+            <div style="text-align: left; width: 45%;">
+                <button onclick="resetNum()" style="background:none; color: #e74c3c; border: 1px solid #e74c3c; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">🔄 تصفير العداد</button>
+            </div>
+            <div style="text-align: right; width: 45%;">
+                <div id="qr-area"></div>
+                <button style="background: #3498db; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 11px; margin-top: 8px; cursor: pointer; width: 100%;" onclick="downloadQR()">💾 حفظ الباركود</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getDatabase, ref, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
+          authDomain: "sofygram-mobile-app.firebaseapp.com",
+          databaseURL: "https://sofygram-mobile-app-default-rtdb.firebaseio.com",
+          projectId: "sofygram-mobile-app",
+          storageBucket: "sofygram-mobile-app.firebasestorage.app",
+          messagingSenderId: "190753733711",
+          appId: "1:190753733711:web:0ce4a97a2878120ff37e3a"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let curUser = ""; let curNum = 0;
+
+        window.login = async () => {
+            const user = document.getElementById('u').value.trim();
+            const pass = document.getElementById('p').value.trim();
+            if(!user || !pass) return alert("يرجى إدخال البيانات");
+
+            const staffSnap = await get(ref(db, 'staff'));
+            const staffData = staffSnap.val();
+            if(staffData) {
+                for(let id in staffData) {
+                    if(staffData[id].name === user && staffData[id].password === pass) {
+                        sessionStorage.setItem('staff_auth', 'true');
+                        location.href = 'staff_work.html';
+                        return;
+                    }
+                }
+            }
+
+            get(child(ref(db), `users/${user}`)).then((s) => {
+                if(s.exists()) {
+                    const userData = s.val();
+                    if(userData.password == pass) {
+                        if(userData.active === true || userData.active === "true") {
+                            curUser = user;
+                            document.getElementById('loginBox').style.display = 'none';
+                            document.getElementById('controlBox').style.display = 'block';
+                            
+                            document.getElementById("qr-area").innerHTML = ""; 
+                            new QRCode(document.getElementById("qr-area"), {
+                                text: `https://sofygrammobile-dotcom.github.io/sofygram-mobile-lab/view.html?id=${curUser}`,
+                                width: 80, height: 80
+                            });
+
+                            onValue(ref(db, `users/${curUser}`), (snap) => {
+                                const d = snap.val(); 
+                                if(d) {
+                                    curNum = d.currentNum || 0;
+                                    document.getElementById('n').innerText = curNum;
+                                    document.getElementById('cName').innerText = d.name || "بدون اسم";
+                                    if(d.note) document.getElementById('nt').value = d.note;
+                                    if(d.status) document.getElementById('st').value = d.status;
+                                }
+                            });
+                        } else {
+                            alert("⚠️ الحساب غير مفعل.");
+                        }
+                    } else {
+                        alert("رمز المرور خاطئ ❌");
+                    }
+                } else {
+                    alert("اسم المستخدم غير موجود ❌");
+                }
+            });
+        };
+
+        window.ch = (v) => { 
+            curNum += v; if(curNum < 0) curNum = 0;
+            update(ref(db, `users/${curUser}`), { currentNum: curNum });
+        };
+
+        window.upDetails = () => {
+            update(ref(db, `users/${curUser}`), { status: document.getElementById('st').value, note: document.getElementById('nt').value })
+            .then(() => alert("تم التحديث ✅"));
+        };
+
+        window.resetNum = () => {
+            if(confirm("تصفير العداد؟")) update(ref(db, `users/${curUser}`), { currentNum: 0 });
+        };
+
+        window.downloadQR = () => {
+            html2canvas(document.querySelector("#qr-area")).then(canvas => {
+                let link = document.createElement('a');
+                link.download = `Sofygram-QR-${curUser}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        };
+    </script>
+</body>
+</html>
