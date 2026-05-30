@@ -7,9 +7,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --gold: #ffd700; --neon: #ff4500; --bg: #050a14; --silver: #c0c0c0; }
-        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; }
+        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; position: relative; }
 
-        .hero { background: radial-gradient(circle at center, #1a2a44 0%, var(--bg) 100%); padding: 30px 15px; }
+        /* زر تغيير اللغة في أعلى اليسار */
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 6px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 100;
+            transition: 0.3s;
+        }
+        .lang-toggle:hover { background: var(--gold); color: black; }
+
+        .hero { background: radial-gradient(circle at center, #1a2a44 0%, var(--bg) 100%); padding: 30px 15px; padding-top: 50px; }
         .logo-box img { width: 140px; filter: drop-shadow(0 0 15px var(--gold)); }
         .brand-title { font-size: 50px; font-weight: 900; text-shadow: 0 0 30px var(--gold); margin: 5px 0; }
 
@@ -68,6 +86,8 @@
     </style>
 </head>
 <body onclick="playWelcome()">
+
+<button class="lang-toggle" id="langBtn" onclick="toggleLanguage(event)">English</button>
 
 <div class="hero">
     <div class="logo-box"><img src="logo.png"></div>
@@ -159,7 +179,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
     
-    // تم تغيير مفاتيح الربط للفايربيس الجديد الخاص بالمختبر
     const firebaseConfig = {
       apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
       authDomain: "sofygram-mobile-app.firebaseapp.com",
@@ -172,6 +191,19 @@
     
     const app = initializeApp(firebaseConfig); 
     const db = getDatabase(app);
+
+    // دالة تغيير اللغة شكلياً
+    window.toggleLanguage = (event) => {
+        event.stopPropagation(); // لمنع تشغيل الترحيب الصوتي عند ضغط الزر
+        const btn = document.getElementById('langBtn');
+        if (btn.innerText === 'English') {
+            btn.innerText = 'عربي';
+            // هنا سيتم إضافة كود تبديل النصوص للإنكليزية لاحقاً
+        } else {
+            btn.innerText = 'English';
+            // هنا سيتم إضافة كود تبديل النصوص للعربية لاحقاً
+        }
+    };
 
     const locations = {
         "العراق": ["النجف", "كربلاء", "بغداد", "البصرة", "بابل", "الأنبار", "أربيل", "السليمانية", "دهوك", "ديالى", "ذي قار", "صلاح الدين", "كركوك", "ميسان", "المثنى", "نينوى", "القادسية", "واسط"],
