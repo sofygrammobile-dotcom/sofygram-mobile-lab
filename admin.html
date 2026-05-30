@@ -3,62 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofygram Admin | دخول السيطرة 🔐</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>Sofygram Live | صوفيگرام المباشر 🛰️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --glow: #ffd700; }
-        body { background: #050a14; color: white; font-family: sans-serif; text-align: center; padding: 15px; margin: 0; }
-        .admin-card { background: #121212; padding: 25px; border-radius: 30px; max-width: 450px; margin: auto; border: 1px solid var(--glow); box-shadow: 0 0 25px rgba(255, 215, 0, 0.1); }
-        .num-display { font-size: 110px; font-weight: bold; color: #fff; margin: 10px 0; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .btn-round { width: 85px; height: 85px; border-radius: 50%; border: none; font-size: 45px; cursor: pointer; color: white; margin: 10px; transition: 0.3s; }
-        .plus { background: #2ecc71; box-shadow: 0 0 15px #2ecc71; }
-        .minus { background: #e74c3c; box-shadow: 0 0 15px #e74c3c; }
-        input, textarea, select { width: 90%; padding: 12px; margin: 8px 0; border-radius: 12px; background: #1e293b; color: white; border: 1px solid #333; text-align: center; }
-        .btn-save { background: var(--glow); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; width: 95%; cursor: pointer; margin-top: 10px; }
-        .tools-grid { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; }
-        #qr-area { background: white; padding: 10px; border-radius: 12px; display: inline-block; }
+        :root { --gold: #ffd700; --neon: #ff4500; --bg: #050a14; }
+        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 10px; padding-bottom: 140px; }
+        
+        .logo-top img { width: 150px; margin-top: 15px; filter: drop-shadow(0 0 10px var(--gold)); }
+
+        #multiSessionContainer { position: fixed; bottom: 15px; left: 0; width: 100%; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 10px 20px; gap: 15px; z-index: 3000; justify-content: flex-start; scrollbar-width: none; }
+        #multiSessionContainer::-webkit-scrollbar { display: none; }
+        .mini-card { min-width: 140px; background: rgba(18, 18, 18, 0.95); border: 2px solid var(--gold); border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: pointer; text-align: center; }
+        .mc-name { font-size: 13px; font-weight: bold; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mc-num { font-size: 35px; font-weight: bold; margin: 5px 0; color: var(--gold); }
+        .mc-close { position: absolute; top: -10px; right: -10px; background: #fff; color: #000; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; display: flex; align-items: center; justify-content: center; z-index: 10; }
+
+        .number-box { background: #121212; border: 3px solid var(--gold); border-radius: 45px; padding: 35px; max-width: 320px; margin: 20px auto; box-shadow: 0 0 30px var(--gold); }
+        .big-num { font-size: 110px; font-weight: bold; margin: 5px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .clinic-title { color: var(--gold); font-size: 28px; margin-bottom: 5px; }
+        
+        .card-ui { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 35px; border: 1px solid #1e293b; max-width: 350px; margin: 20px auto; }
+        input { padding: 15px; border-radius: 15px; border: 2px solid var(--gold); background: #000; color: #fff; text-align: center; width: 80px; font-size: 22px; outline: none; }
+        
+        .bell-btn { font-size: 70px; background: none; border: none; filter: grayscale(1); cursor: pointer; transition: 0.3s; }
+        .bell-active { filter: grayscale(0) drop-shadow(0 0 20px var(--gold)); animation: ring 1s infinite; }
+        
+        @keyframes ring { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+
+        .btn-back { background: rgba(255,255,255,0.05); color: #888; border: 1px solid #333; padding: 15px; border-radius: 15px; width: 90%; cursor: pointer; font-size: 16px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="loginBox" class="admin-card">
-        <img src="logo.png" style="width:140px; margin-bottom:20px;" onerror="this.src='https://sofygram.com/logo.png'">
-        <h2 style="color:var(--glow);">دخول الإدارة والسكرتارية 🔐</h2>
-        <input type="text" id="u" placeholder="اسم المستخدم (مثل: hf2026)">
-        <input type="password" id="p" placeholder="كلمة المرور">
-        <button onclick="login()" class="btn-save">دخول</button>
-    </div>
+    <div id="multiSessionContainer"></div>
+    <div class="logo-top"><img src="logo.png" onerror="this.src='https://sofygram.com/logo.png'"></div>
 
-    <div id="controlBox" class="admin-card" style="display:none;">
-        <h2 id="cName" style="color:var(--glow); margin:0;"></h2>
-        <div class="num-display" id="n">0</div>
-        <div style="display:flex; justify-content:center;">
-            <button class="btn-round minus" onclick="ch(-1)">-</button>
-            <button class="btn-round plus" onclick="ch(1)">+</button>
+    <div id="livePage">
+        <h2 id="clinicName" class="clinic-title">جاري التحميل...</h2>
+        <div id="statusTag" style="display:inline-block; padding:8px 25px; border-radius:50px; font-size:14px; border:2px solid var(--gold); color:var(--gold); margin-bottom:15px;">--</div>
+        
+        <div class="number-box">
+            <p style="color:#888; font-size:14px; margin:0;">الرقم الحالي الآن</p>
+            <div class="big-num" id="liveNumber">0</div>
+            <div id="liveNote" style="background:rgba(255,215,0,0.1); border:1px dashed var(--gold); padding:12px; border-radius:15px; margin-top:10px; color:var(--gold); font-weight:bold; display:none;"></div>
         </div>
-        <select id="st">
-            <option value="🟢 مفتوح الآن | Open">🟢 مفتوح الآن</option>
-            <option value="🟡 قريباً | Soon">🟡 قريباً</option>
-            <option value="🔴 مغلق | Closed">🔴 مغلق</option>
-        </select>
-        <textarea id="nt" placeholder="اكتب ملاحظة للمراجعين..."></textarea>
-        <button onclick="upDetails()" class="btn-save">تحديث البيانات 🚀</button>
-        <div class="tools-grid">
-            <div style="text-align: left; width: 45%;">
-                <button onclick="resetNum()" style="background:none; color: #e74c3c; border: 1px solid #e74c3c; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">🔄 تصفير العداد</button>
-            </div>
-            <div style="text-align: right; width: 45%;">
-                <div id="qr-area"></div>
-                <button style="background: #3498db; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 11px; margin-top: 8px; cursor: pointer; width: 100%;" onclick="downloadQR()">💾 حفظ الباركود</button>
-            </div>
+
+        <div class="card-ui">
+            <p style="color:var(--gold); font-weight:bold; margin-bottom:15px;">🔔 منبه ساعة الصفر (نداء المترو)</p>
+            <input type="number" id="userTarget" placeholder="0">
+            <br>
+            <button id="bellIcon" class="bell-btn" onclick="toggleAlarm()">🔔</button>
+            <p style="font-size:12px; color:#666; margin-top:10px;">سيتم نداء رقمك بالعربي والإنكليزي فور وصول السرا</p>
         </div>
+        
+        <button class="btn-back" onclick="location.href='index.html'">🔍 العودة للبحث عن نشاط آخر</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
-        import { getDatabase, ref, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+        import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
+        // مفاتيح الفايربيس للمختبر الجديد
         const firebaseConfig = {
           apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
           authDomain: "sofygram-mobile-app.firebaseapp.com",
@@ -71,92 +76,105 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let curUser = ""; let curNum = 0;
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        let activeSessions = JSON.parse(localStorage.getItem('sofygramSessions')) || [];
+        let isAlarmReady = false;
 
-        window.login = async () => {
-            try {
-                const user = document.getElementById('u').value.trim();
-                const pass = document.getElementById('p').value.trim();
+        if(id) { 
+            startTracking(id); 
+            addToSessions(id); 
+        } else {
+            document.getElementById('clinicName').innerText = "الرابط غير صحيح أو مفقود ❌";
+            document.getElementById('statusTag').style.display = "none";
+        }
+        
+        window.addEventListener('load', renderMultiCards);
 
-                if(!user || !pass) {
-                    alert("يرجى إدخال اسم المستخدم وكلمة المرور!");
+        function triggerMetroAlarm() {
+            const synth = window.speechSynthesis;
+            const msgAr = new SpeechSynthesisUtterance("أهلاً بكم في منصة صوفي غرام العالمية. حان موعدكم الآن، يرجى التوجه حالاً. شكراً لكم.");
+            msgAr.lang = 'ar-SA';
+            msgAr.rate = 0.9;
+            
+            const msgEn = new SpeechSynthesisUtterance("Welcome to Sofygram Global. It is your turn now, please proceed immediately. Thank you.");
+            msgEn.lang = 'en-US';
+            msgEn.rate = 1.0;
+
+            synth.speak(msgAr);
+            synth.speak(msgEn);
+            if ("vibrate" in navigator) { navigator.vibrate([500, 200, 500, 200, 500]); }
+            alert("🔔 صوفيگرام: حان دورك الآن!");
+        }
+
+        function startTracking(targetId) {
+            onValue(ref(db, 'users/' + targetId), (snap) => {
+                const info = snap.val(); 
+                if(!info) {
+                    document.getElementById('clinicName').innerText = "الحساب غير موجود ❌";
                     return;
                 }
+                const current = info.currentNum || 0;
+                
+                document.getElementById('liveNumber').innerText = current;
+                document.getElementById('clinicName').innerText = info.name || "عيادة مسجلة";
+                document.getElementById('statusTag').innerText = info.status || "متصل";
+                
+                const noteBox = document.getElementById('liveNote');
+                if(info.note) { noteBox.innerText = info.note; noteBox.style.display = "block"; } 
+                else { noteBox.style.display = "none"; }
 
-                const staffSnap = await get(ref(db, 'staff'));
-                const staffData = staffSnap.val();
-                if(staffData) {
-                    for(let id in staffData) {
-                        if(staffData[id].name === user && staffData[id].password === pass) {
-                            sessionStorage.setItem('staff_auth', 'true');
-                            sessionStorage.setItem('staff_name', user);
-                            alert("أهلاً بك يا فريق الإدارة ✅");
-                            location.href = 'staff_work.html';
-                            return;
-                        }
-                    }
+                const target = document.getElementById('userTarget').value;
+                if(isAlarmReady && target == current && current != 0) {
+                    triggerMetroAlarm();
+                    isAlarmReady = false;
+                    document.getElementById('bellIcon').classList.remove('bell-active');
                 }
-
-                const userSnap = await get(child(ref(db), `users/${user}`));
-                if(userSnap.exists()) {
-                    const userData = userSnap.val();
-                    if(userData.password == pass) {
-                        if(userData.active === true || userData.active === "true") {
-                            curUser = user;
-                            document.getElementById('loginBox').style.display = 'none';
-                            document.getElementById('controlBox').style.display = 'block';
-                            
-                            document.getElementById("qr-area").innerHTML = ""; 
-                            new QRCode(document.getElementById("qr-area"), {
-                                text: `https://sofygrammobile-dotcom.github.io/sofygram-mobile-lab/view.html?id=${curUser}`,
-                                width: 80, height: 80
-                            });
-
-                            onValue(ref(db, `users/${curUser}`), (snap) => {
-                                const d = snap.val(); 
-                                if(d) {
-                                    curNum = d.currentNum || 0;
-                                    document.getElementById('n').innerText = curNum;
-                                    document.getElementById('cName').innerText = d.name || "بدون اسم";
-                                    if(d.note) document.getElementById('nt').value = d.note;
-                                    if(d.status) document.getElementById('st').value = d.status;
-                                }
-                            });
-                        } else {
-                            alert("⚠️ الحساب موجود ولكنه غير مفعل. يرجى تفعيله من لوحة الماستر.");
-                        }
-                    } else {
-                        alert("رمز المرور خاطئ ❌");
-                    }
-                } else {
-                    alert("اسم المستخدم غير موجود ❌");
-                }
-            } catch (error) {
-                alert("حدث خطأ أثناء الاتصال: " + error.message);
-            }
-        };
-
-        window.ch = (v) => { 
-            curNum += v; if(curNum < 0) curNum = 0;
-            update(ref(db, `users/${curUser}`), { currentNum: curNum });
-        };
-
-        window.upDetails = () => {
-            update(ref(db, `users/${curUser}`), { status: document.getElementById('st').value, note: document.getElementById('nt').value })
-            .then(() => alert("تم التحديث ✅"));
-        };
-
-        window.resetNum = () => {
-            if(confirm("تصفير العداد؟")) update(ref(db, `users/${curUser}`), { currentNum: 0 });
-        };
-
-        window.downloadQR = () => {
-            html2canvas(document.querySelector("#qr-area")).then(canvas => {
-                let link = document.createElement('a');
-                link.download = `Sofygram-QR-${curUser}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
             });
+        }
+
+        function addToSessions(newId) {
+            if (!activeSessions.includes(newId)) {
+                if (activeSessions.length >= 4) activeSessions.shift();
+                activeSessions.push(newId);
+                localStorage.setItem('sofygramSessions', JSON.stringify(activeSessions));
+            }
+        }
+
+        function renderMultiCards() {
+            const container = document.getElementById('multiSessionContainer');
+            container.innerHTML = "";
+            activeSessions.forEach(sid => {
+                get(ref(db, 'users/' + sid)).then(snap => {
+                    const u = snap.val(); if(!u) return;
+                    const card = document.createElement('div');
+                    card.className = 'mini-card';
+                    card.onclick = () => location.href = 'view.html?id=' + sid;
+                    card.innerHTML = `
+                        <div class="mc-close" onclick="removeSession(event,'${sid}')">×</div>
+                        <p class="mc-name">${u.name || 'عيادة'}</p>
+                        <div class="mc-num" id="n-${sid}">${u.currentNum || 0}</div>
+                    `;
+                    container.appendChild(card);
+                    onValue(ref(db, `users/${sid}/currentNum`), s => {
+                        const el = document.getElementById(`n-${sid}`); if(el) el.innerText = s.val() || 0;
+                    });
+                });
+            });
+        }
+
+        window.removeSession = (e, sid) => {
+            e.stopPropagation();
+            activeSessions = activeSessions.filter(i => i !== sid);
+            localStorage.setItem('sofygramSessions', JSON.stringify(activeSessions));
+            renderMultiCards();
+        };
+
+        window.toggleAlarm = () => {
+            if(!document.getElementById('userTarget').value) return alert("يرجى إدخال رقمك أولاً 🔔");
+            isAlarmReady = !isAlarmReady;
+            document.getElementById('bellIcon').classList.toggle('bell-active');
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
         };
     </script>
 </body>
