@@ -108,4 +108,56 @@
                             
                             document.getElementById("qr-area").innerHTML = ""; 
                             new QRCode(document.getElementById("qr-area"), {
-                                text: `https://sofygrammobile
+                                text: `https://sofygrammobile-dotcom.github.io/sofygram-mobile-lab/view.html?id=${curUser}`,
+                                width: 80, height: 80
+                            });
+
+                            onValue(ref(db, `users/${curUser}`), (snap) => {
+                                const d = snap.val(); 
+                                if(d) {
+                                    curNum = d.currentNum || 0;
+                                    document.getElementById('n').innerText = curNum;
+                                    document.getElementById('cName').innerText = d.name || "بدون اسم";
+                                    if(d.note) document.getElementById('nt').value = d.note;
+                                    if(d.status) document.getElementById('st').value = d.status;
+                                }
+                            });
+                        } else {
+                            alert("⚠️ الحساب موجود ولكنه غير مفعل. يرجى تفعيله من لوحة الماستر.");
+                        }
+                    } else {
+                        alert("رمز المرور خاطئ ❌");
+                    }
+                } else {
+                    alert("اسم المستخدم غير موجود ❌");
+                }
+            } catch (error) {
+                alert("حدث خطأ أثناء الاتصال: " + error.message);
+            }
+        };
+
+        window.ch = (v) => { 
+            curNum += v; if(curNum < 0) curNum = 0;
+            update(ref(db, `users/${curUser}`), { currentNum: curNum });
+        };
+
+        window.upDetails = () => {
+            update(ref(db, `users/${curUser}`), { status: document.getElementById('st').value, note: document.getElementById('nt').value })
+            .then(() => alert("تم التحديث ✅"));
+        };
+
+        window.resetNum = () => {
+            if(confirm("تصفير العداد؟")) update(ref(db, `users/${curUser}`), { currentNum: 0 });
+        };
+
+        window.downloadQR = () => {
+            html2canvas(document.querySelector("#qr-area")).then(canvas => {
+                let link = document.createElement('a');
+                link.download = `Sofygram-QR-${curUser}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        };
+    </script>
+</body>
+</html>
