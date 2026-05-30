@@ -47,11 +47,6 @@
         .res-name { color: var(--gold); margin: 0 0 8px 0; font-size: 22px; font-weight: bold; }
         .res-meta { color: #ccc; font-size: 14px; margin: 4px 0; display: flex; align-items: center; gap: 8px; }
         .res-meta i { color: var(--gold); font-size: 12px; }
-        .res-note { 
-            background: rgba(255, 215, 0, 0.1); border: 1px dashed var(--gold); 
-            padding: 8px 12px; border-radius: 12px; margin-top: 10px; 
-            color: var(--gold); font-size: 13px; font-weight: bold;
-        }
 
         .golden-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; max-width: 900px; margin: 30px auto; padding: 0 15px; }
         .note-card { background: rgba(255, 215, 0, 0.05); border: 1px solid var(--gold); padding: 15px; border-radius: 18px; font-size: 13px; color: var(--gold); font-weight: bold; }
@@ -130,13 +125,13 @@
             <h3 style="color:var(--gold)" id="goldTitle">الاشتراك الذهبي</h3>
             <p style="font-size:12px; color:#aaa;" id="goldDesc">للأطباء والعيادات</p>
             <div class="price" id="goldPrice">20,000 <small>د.ع</small></div>
-            <a href="pay20.html?type=gold" class="btn-reg" id="goldBtn">اشترك الآن</a>
+            <a href="register2.html?plan=gold" class="btn-reg" id="goldBtn">اشترك الآن</a>
         </div>
         <div class="plan-box silver">
             <h3 style="color:var(--silver)" id="silverTitle">الاشتراك الفضي</h3>
             <p style="font-size:12px; color:#aaa;" id="silverDesc">لكافة الأنشطة الأخرى</p>
             <div class="price" id="silverPrice">15,000 <small>د.ع</small></div>
-            <a href="pay.html?type=silver" class="btn-reg" id="silverBtn">اشترك الآن</a>
+            <a href="register2.html?plan=silver" class="btn-reg" id="silverBtn">اشترك الآن</a>
         </div>
     </div>
 
@@ -158,7 +153,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
     
-    // مفاتيح المختبر
     const firebaseConfig = {
       apiKey: "AIzaSyA3BtNZYPLaDTEjuh0AjMp43RzRQGALFBU",
       authDomain: "sofygram-mobile-app.firebaseapp.com",
