@@ -2,68 +2,48 @@
 <html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
-    <title id="title">تسجيل الحساب | صوفيگرام</title>
+    <title id="regTitle">تسجيل الحساب</title>
     <style>
         body { background: #050a14; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
         .reg-card { background: #121212; padding: 30px; border-radius: 25px; border: 1px solid #ffd700; max-width: 400px; margin: auto; }
-        .lang-btn { background: #222; color: #ffd700; border: 1px solid #ffd700; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
-        .btn-reg { background: #ffd700; color: black; padding: 15px; border-radius: 10px; width: 100%; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .lang-btn { background: #222; color: #ffd700; border: 1px solid #ffd700; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; background: #000; color: white; border: 1px solid #333; box-sizing: border-box; }
+        .btn-reg { background: #ffd700; color: black; padding: 15px; border-radius: 10px; width: 100%; border: none; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div style="text-align: left;">
-        <button class="lang-btn" onclick="toggleLang()">English / العربية</button>
-    </div>
-
+    <button class="lang-btn" onclick="toggleLang()">English / العربية</button>
     <div class="reg-card">
-        <h2 id="regTitle">تسجيل حساب جديد</h2>
+        <h2 id="rTitle">تسجيل حساب جديد</h2>
         <input type="text" id="name" placeholder="الاسم الكامل">
-        <input type="text" id="phone" placeholder="رقم الهاتف">
-        <input type="text" id="user" placeholder="اسم المستخدم (اليوزر)">
-        <input type="password" id="pass" placeholder="كلمة المرور">
-        <button class="btn-reg" onclick="register()">تسجيل ومتابعة للدفع</button>
+        <input type="text" id="user" placeholder="اسم المستخدم">
+        <button class="btn-reg" id="regBtn" onclick="register()">تسجيل ومتابعة للدفع</button>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const plan = urlParams.get('plan');
-
-        const langData = {
-            ar: { title: "تسجيل الحساب", regTitle: "تسجيل حساب جديد", name: "الاسم الكامل", phone: "رقم الهاتف", user: "اسم المستخدم (اليوزر)", pass: "كلمة المرور", btn: "تسجيل ومتابعة للدفع" },
-            en: { title: "Register Account", regTitle: "Register New Account", name: "Full Name", phone: "Phone Number", user: "Username", pass: "Password", btn: "Register & Continue to Pay" }
-        };
-
-        function applyLang(lang) {
-            document.getElementById('htmlTag').dir = lang === 'en' ? 'ltr' : 'rtl';
-            document.getElementById('regTitle').innerText = langData[lang].regTitle;
-            document.getElementById('name').placeholder = langData[lang].name;
-            document.getElementById('phone').placeholder = langData[lang].phone;
-            document.getElementById('user').placeholder = langData[lang].user;
-            document.getElementById('pass').placeholder = langData[lang].pass;
-            document.querySelector('.btn-reg').innerText = langData[lang].btn;
-        }
-
+        const plan = new URLSearchParams(window.location.search).get('plan');
         function toggleLang() {
             let lang = localStorage.getItem('sofygramLang') === 'en' ? 'ar' : 'en';
             localStorage.setItem('sofygramLang', lang);
-            applyLang(lang);
+            location.reload(); // تحديث الصفحة لتطبيق اللغة
         }
-
-        window.onload = () => {
-            applyLang(localStorage.getItem('sofygramLang') || 'ar');
-        };
-
-        // دالة التسجيل (مختصرة)
         function register() {
             const user = document.getElementById('user').value;
             const name = document.getElementById('name').value;
-            // ... (أضف منطق الحفظ في Firebase هنا كما في كودك الأصلي)
-            // بعد الحفظ الناجح، حوله لصفحة الدفع:
-            const targetPage = (plan === 'gold') ? 'pay20.html' : 'pay.html';
-            window.location.href = `${targetPage}?user=${user}&name=${encodeURIComponent(name)}`;
+            if(!user || !name) return alert("يرجى ملء البيانات");
+            const target = (plan === 'gold') ? 'pay20.html' : 'pay.html';
+            window.location.href = `${target}?user=${user}&name=${encodeURIComponent(name)}`;
         }
+        window.onload = () => {
+            const lang = localStorage.getItem('sofygramLang') || 'ar';
+            if(lang === 'en') {
+                document.getElementById('htmlTag').dir = 'ltr';
+                document.getElementById('rTitle').innerText = "Register New Account";
+                document.getElementById('name').placeholder = "Full Name";
+                document.getElementById('user').placeholder = "Username";
+                document.getElementById('regBtn').innerText = "Register & Continue";
+            }
+        };
     </script>
 </body>
 </html>
